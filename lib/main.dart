@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pawpal/view/login_view.dart';
+import 'package:pawpal/view/pet_owner_dashboard_view.dart';
+import 'package:pawpal/view/pet_sitter_dashboard_view.dart';
 import 'package:pawpal/view/registration_view.dart';
 
 void main() {
@@ -15,6 +17,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginView(),
         '/register': (context) => const RegistrationView(),
+        '/petsitter': (context) => const PetSitterDashboardView(),
+        '/petowner': (context) => const PetOwnerDashboardView(),
       },
     );
   }
