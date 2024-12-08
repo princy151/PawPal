@@ -4,12 +4,15 @@ class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  _LoginViewState createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -27,97 +30,154 @@ class _LoginViewState extends State<LoginView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login Page'),
+        title: const Text("Login", style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Pet Owner'),
-            Tab(text: 'Pet Sitter'),
+        backgroundColor: const Color(0xFFB55C50), // Reddish-brown AppBar color
+        elevation: 4,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 6,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: TabBar(
+                controller: _tabController,
+                indicator: BoxDecoration(
+                  color: const Color(0xFFFFD8D3),
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                labelColor: Colors.black, // Dark text color for selected tab
+                labelStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                unselectedLabelColor: Colors.black54,
+                tabs: const [
+                  Tab(text: "Pet Owner"),
+                  Tab(text: "Pet Sitter"),
+                ],
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildLoginForm("Pet Owner", Icons.pets),
+                  _buildLoginForm("Pet Sitter", Icons.person_outline),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          // Pet Owner Login Form
-          LoginForm(userType: 'Pet Owner'),
-          // Pet Sitter Login Form
-          LoginForm(userType: 'Pet Sitter'),
-        ],
-      ),
     );
   }
-}
 
-class LoginForm extends StatelessWidget {
-  final String userType;
-
-  const LoginForm({Key? key, required this.userType}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Login as $userType',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-
-            // Email Input Field
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                prefixIcon: const Icon(Icons.email),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+  Widget _buildLoginForm(String userType, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 40),
+      child: Center(
+        child: Card(
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  color: const Color(0xFFB55C50),
+                  size: 40,
                 ),
-              ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 20),
-
-            // Password Input Field
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Password',
-                prefixIcon: const Icon(Icons.lock),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-
-            // Login Button
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  // TODO: Handle login based on userType
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Logging in as $userType')),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                const SizedBox(height: 16),
+                Text(
+                  "$userType Login",
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFB55C50),
                   ),
                 ),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 18),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    labelStyle: const TextStyle(color: Colors.black45),
+                    prefixIcon:
+                        const Icon(Icons.email, color: Color(0xFFB55C50)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
+                  keyboardType: TextInputType.emailAddress,
                 ),
-              ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    labelStyle: const TextStyle(color: Colors.black45),
+                    prefixIcon:
+                        const Icon(Icons.lock, color: Color(0xFFB55C50)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        const Color(0xFFB55C50), // Reddish-brown button color
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                      horizontal: 32,
+                    ),
+                  ),
+                  child: const Text(
+                    "Login",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/register');
+                  },
+                  child: const Text(
+                    "Don't have an account? Register",
+                    style: TextStyle(color: Color(0xFFB55C50)),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
