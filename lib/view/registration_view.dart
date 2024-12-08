@@ -18,14 +18,11 @@ class _RegistrationViewState extends State<RegistrationView>
   TextEditingController petWeightController = TextEditingController();
   TextEditingController experienceController = TextEditingController();
   TextEditingController sitterTypeController = TextEditingController();
-  TextEditingController ownerNameController =
-      TextEditingController(); // New field
-  TextEditingController phoneController = TextEditingController(); // New field
-  TextEditingController sitterNameController =
-      TextEditingController(); // New field
-  TextEditingController addressController =
-      TextEditingController(); // New field
-  TextEditingController dobController = TextEditingController(); // New field
+  TextEditingController ownerNameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController sitterNameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
 
   @override
   void initState() {
@@ -45,7 +42,7 @@ class _RegistrationViewState extends State<RegistrationView>
       appBar: AppBar(
         title: const Text("Register", style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: const Color(0xFFB55C50), // Reddish-brown AppBar color
+        backgroundColor: const Color(0xFFB55C50),
         elevation: 4,
       ),
       body: Padding(
@@ -68,10 +65,10 @@ class _RegistrationViewState extends State<RegistrationView>
               child: TabBar(
                 controller: _tabController,
                 indicator: BoxDecoration(
-                  color: const Color(0xFFFFD8D3), // Light reddish color
+                  color: const Color(0xFFFFD8D3),
                   borderRadius: BorderRadius.circular(25),
                 ),
-                labelColor: Colors.black, // Dark text color for selected tab
+                labelColor: Colors.black,
                 labelStyle: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -147,7 +144,7 @@ class _RegistrationViewState extends State<RegistrationView>
                     ),
                     const SizedBox(height: 16),
                   ],
-                  // Sitter's Name field (for Pet Sitter only)
+
                   if (!isPetOwner) ...[
                     TextField(
                       controller: sitterNameController,
@@ -197,7 +194,7 @@ class _RegistrationViewState extends State<RegistrationView>
                     obscureText: true,
                   ),
                   const SizedBox(height: 20),
-                  // Additional fields for Pet Owner
+
                   if (isPetOwner) ...[
                     TextField(
                       controller: petNameController,
@@ -277,7 +274,7 @@ class _RegistrationViewState extends State<RegistrationView>
                     ),
                   ],
                   const SizedBox(height: 16),
-                  // Address field (for both Owner and Sitter)
+
                   TextField(
                     controller: addressController,
                     decoration: InputDecoration(
@@ -293,7 +290,7 @@ class _RegistrationViewState extends State<RegistrationView>
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Date of Birth field (for both Owner and Sitter)
+
                   TextField(
                     controller: dobController,
                     decoration: InputDecoration(
@@ -311,12 +308,9 @@ class _RegistrationViewState extends State<RegistrationView>
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      // Handle registration logic
-                    },
+                    onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          const Color(0xFFB55C50), // Updated parameter
+                      backgroundColor: const Color(0xFFB55C50),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 60, vertical: 14),
                       shape: RoundedRectangleBorder(

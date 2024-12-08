@@ -10,6 +10,8 @@ class PetSitterDashboardView extends StatefulWidget {
 class _PetSitterDashboardViewState extends State<PetSitterDashboardView> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      body: Text('Pet Sitter dashboard'),
+    );
   }
 }

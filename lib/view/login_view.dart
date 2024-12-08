@@ -32,7 +32,7 @@ class _LoginViewState extends State<LoginView>
       appBar: AppBar(
         title: const Text("Login", style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: const Color(0xFFB55C50), // Reddish-brown AppBar color
+        backgroundColor: const Color(0xFFB55C50),
         elevation: 4,
       ),
       body: Padding(
@@ -58,7 +58,7 @@ class _LoginViewState extends State<LoginView>
                   color: const Color(0xFFFFD8D3),
                   borderRadius: BorderRadius.circular(25),
                 ),
-                labelColor: Colors.black, // Dark text color for selected tab
+                labelColor: Colors.black,
                 labelStyle: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -74,8 +74,9 @@ class _LoginViewState extends State<LoginView>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  _buildLoginForm("Pet Owner", Icons.pets),
-                  _buildLoginForm("Pet Sitter", Icons.person_outline),
+                  _buildLoginForm("Pet Owner", Icons.pets, '/petowner'),
+                  _buildLoginForm(
+                      "Pet Sitter", Icons.person_outline, '/petsitter'),
                 ],
               ),
             ),
@@ -85,7 +86,7 @@ class _LoginViewState extends State<LoginView>
     );
   }
 
-  Widget _buildLoginForm(String userType, IconData icon) {
+  Widget _buildLoginForm(String userType, IconData icon, String route) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Center(
@@ -147,10 +148,11 @@ class _LoginViewState extends State<LoginView>
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, route);
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFFB55C50), // Reddish-brown button color
+                    backgroundColor: const Color(0xFFB55C50),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
