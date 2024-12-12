@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RegistrationView extends StatefulWidget {
-  const RegistrationView({Key? key}) : super(key: key);
+  const RegistrationView({super.key});
 
   @override
   _RegistrationViewState createState() => _RegistrationViewState();
@@ -96,7 +96,9 @@ class _RegistrationViewState extends State<RegistrationView>
   }
 
   Widget _buildRegistrationForm(String userType) {
+    final formKey = GlobalKey<FormState>();
     bool isPetOwner = userType == "Pet Owner";
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 40),
@@ -108,237 +110,247 @@ class _RegistrationViewState extends State<RegistrationView>
             ),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    isPetOwner ? Icons.pets : Icons.person_outline,
-                    color: const Color(0xFFB55C50),
-                    size: 40,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "$userType Registration",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFB55C50),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // Owner's Name field (for Pet Owner only)
-                  if (isPetOwner) ...[
-                    TextField(
-                      controller: ownerNameController,
-                      decoration: InputDecoration(
-                        labelText: "Owner's Name",
-                        labelStyle: const TextStyle(color: Colors.black45),
-                        prefixIcon:
-                            const Icon(Icons.person, color: Color(0xFFB55C50)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      isPetOwner ? Icons.pets : Icons.person_outline,
+                      color: const Color(0xFFB55C50),
+                      size: 40,
                     ),
                     const SizedBox(height: 16),
-                  ],
-
-                  if (!isPetOwner) ...[
-                    TextField(
-                      controller: sitterNameController,
-                      decoration: InputDecoration(
-                        labelText: "Sitter's Name",
-                        labelStyle: const TextStyle(color: Colors.black45),
-                        prefixIcon:
-                            const Icon(Icons.person, color: Color(0xFFB55C50)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                  TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      labelText: "Email",
-                      labelStyle: const TextStyle(color: Colors.black45),
-                      prefixIcon:
-                          const Icon(Icons.email, color: Color(0xFFB55C50)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      labelStyle: const TextStyle(color: Colors.black45),
-                      prefixIcon:
-                          const Icon(Icons.lock, color: Color(0xFFB55C50)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                    ),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 20),
-
-                  if (isPetOwner) ...[
-                    TextField(
-                      controller: petNameController,
-                      decoration: InputDecoration(
-                        labelText: "Pet Name",
-                        labelStyle: const TextStyle(color: Colors.black45),
-                        prefixIcon:
-                            const Icon(Icons.pets, color: Color(0xFFB55C50)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: petTypeController,
-                      decoration: InputDecoration(
-                        labelText: "Pet Type",
-                        labelStyle: const TextStyle(color: Colors.black45),
-                        prefixIcon:
-                            const Icon(Icons.pets, color: Color(0xFFB55C50)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: petWeightController,
-                      decoration: InputDecoration(
-                        labelText: "Pet Weight (kg)",
-                        labelStyle: const TextStyle(color: Colors.black45),
-                        prefixIcon:
-                            const Icon(Icons.scale, color: Color(0xFFB55C50)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                  ] else ...[
-                    // Experience and Sitter Type for Pet Sitter
-                    TextField(
-                      controller: experienceController,
-                      decoration: InputDecoration(
-                        labelText: "Experience",
-                        labelStyle: const TextStyle(color: Colors.black45),
-                        prefixIcon:
-                            const Icon(Icons.star, color: Color(0xFFB55C50)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: sitterTypeController,
-                      decoration: InputDecoration(
-                        labelText: "Sitter Type (e.g., Full-time)",
-                        labelStyle: const TextStyle(color: Colors.black45),
-                        prefixIcon:
-                            const Icon(Icons.people, color: Color(0xFFB55C50)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-
-                  TextField(
-                    controller: addressController,
-                    decoration: InputDecoration(
-                      labelText: "Address",
-                      labelStyle: const TextStyle(color: Colors.black45),
-                      prefixIcon: const Icon(Icons.location_on,
-                          color: Color(0xFFB55C50)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  TextField(
-                    controller: dobController,
-                    decoration: InputDecoration(
-                      labelText: "Date of Birth",
-                      labelStyle: const TextStyle(color: Colors.black45),
-                      prefixIcon: const Icon(Icons.calendar_today,
-                          color: Color(0xFFB55C50)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                    ),
-                    keyboardType: TextInputType.datetime,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFB55C50),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 60, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      "Register",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/login');
-                    },
-                    child: const Text(
-                      "Already have an account? Login",
-                      style: TextStyle(
-                        color: Color(0xFFB55C50),
+                    Text(
+                      "$userType Registration",
+                      style: const TextStyle(
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
+                        color: Color(0xFFB55C50),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                    if (isPetOwner)
+                      TextFormField(
+                        controller: ownerNameController,
+                        decoration: InputDecoration(
+                          labelText: "Owner's Name",
+                          prefixIcon: const Icon(Icons.person,
+                              color: Color(0xFFB55C50)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) => value == null || value.isEmpty
+                            ? "Owner's name is required"
+                            : null,
+                      )
+                    else
+                      TextFormField(
+                        controller: sitterNameController,
+                        decoration: InputDecoration(
+                          labelText: "Sitter's Name",
+                          prefixIcon: const Icon(Icons.person,
+                              color: Color(0xFFB55C50)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) => value == null || value.isEmpty
+                            ? "Sitter's name is required"
+                            : null,
+                      ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        prefixIcon:
+                            const Icon(Icons.email, color: Color(0xFFB55C50)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Email is required";
+                        }
+                        if (!RegExp(r"^[^@]+@[^@]+\.[^@]+$").hasMatch(value)) {
+                          return "Enter a valid email";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        prefixIcon:
+                            const Icon(Icons.lock, color: Color(0xFFB55C50)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      obscureText: true,
+                      validator: (value) => value == null || value.isEmpty
+                          ? "Password is required"
+                          : null,
+                    ),
+                    const SizedBox(height: 20),
+                    if (isPetOwner) ...[
+                      TextFormField(
+                        controller: petNameController,
+                        decoration: InputDecoration(
+                          labelText: "Pet Name",
+                          prefixIcon:
+                              const Icon(Icons.pets, color: Color(0xFFB55C50)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) => value == null || value.isEmpty
+                            ? "Pet name is required"
+                            : null,
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: petTypeController,
+                        decoration: InputDecoration(
+                          labelText: "Pet Type",
+                          prefixIcon:
+                              const Icon(Icons.pets, color: Color(0xFFB55C50)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) => value == null || value.isEmpty
+                            ? "Pet type is required"
+                            : null,
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: petWeightController,
+                        decoration: InputDecoration(
+                          labelText: "Pet Weight (kg)",
+                          prefixIcon:
+                              const Icon(Icons.scale, color: Color(0xFFB55C50)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Pet weight is required";
+                          }
+                          if (double.tryParse(value) == null) {
+                            return "Enter a valid number";
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                    if (!isPetOwner) ...[
+                      TextFormField(
+                        controller: experienceController,
+                        decoration: InputDecoration(
+                          labelText: "Experience",
+                          prefixIcon:
+                              const Icon(Icons.star, color: Color(0xFFB55C50)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) => value == null || value.isEmpty
+                            ? "Experience is required"
+                            : null,
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: sitterTypeController,
+                        decoration: InputDecoration(
+                          labelText: "Sitter Type (e.g., Full-time)",
+                          prefixIcon: const Icon(Icons.people,
+                              color: Color(0xFFB55C50)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) => value == null || value.isEmpty
+                            ? "Sitter type is required"
+                            : null,
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: addressController,
+                      decoration: InputDecoration(
+                        labelText: "Address",
+                        prefixIcon: const Icon(Icons.location_on,
+                            color: Color(0xFFB55C50)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      validator: (value) => value == null || value.isEmpty
+                          ? "Address is required"
+                          : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: dobController,
+                      decoration: InputDecoration(
+                        labelText: "Date of Birth",
+                        prefixIcon: const Icon(Icons.calendar_today,
+                            color: Color(0xFFB55C50)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      keyboardType: TextInputType.datetime,
+                      validator: (value) => value == null || value.isEmpty
+                          ? "Date of birth is required"
+                          : null,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {}
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFB55C50),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 60, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        "Register",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      child: const Text(
+                        "Already have an account? Login",
+                        style: TextStyle(
+                          color: Color(0xFFB55C50),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

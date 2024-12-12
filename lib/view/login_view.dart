@@ -32,7 +32,7 @@ class _LoginViewState extends State<LoginView>
       appBar: AppBar(
         title: const Text("Login", style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: const Color(0xFFB55C50),
+        backgroundColor: const Color(0xFFB55C50), // Reddish-brown AppBar color
         elevation: 4,
       ),
       body: Padding(
@@ -58,7 +58,7 @@ class _LoginViewState extends State<LoginView>
                   color: const Color(0xFFFFD8D3),
                   borderRadius: BorderRadius.circular(25),
                 ),
-                labelColor: Colors.black,
+                labelColor: Colors.black, // Dark text color for selected tab
                 labelStyle: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -74,9 +74,8 @@ class _LoginViewState extends State<LoginView>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  _buildLoginForm("Pet Owner", Icons.pets, '/petowner'),
-                  _buildLoginForm(
-                      "Pet Sitter", Icons.person_outline, '/petsitter'),
+                  _buildLoginForm("Pet Owner", Icons.pets),
+                  _buildLoginForm("Pet Sitter", Icons.person_outline),
                 ],
               ),
             ),
@@ -86,7 +85,7 @@ class _LoginViewState extends State<LoginView>
     );
   }
 
-  Widget _buildLoginForm(String userType, IconData icon, String route) {
+  Widget _buildLoginForm(String userType, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Center(
@@ -149,10 +148,41 @@ class _LoginViewState extends State<LoginView>
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, route);
+                    if (emailController.text == 'admin' &&
+                        passwordController.text == 'admin') {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Login Successful'),
+                          content: Text('Welcome, $userType!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Login Failed'),
+                          content: const Text(
+                              'Invalid credentials. Please try again.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFB55C50),
+                    backgroundColor:
+                        const Color(0xFFB55C50), // Reddish-brown button color
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
