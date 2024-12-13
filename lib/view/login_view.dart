@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pawpal/common/my_snackbar.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -23,6 +24,8 @@ class _LoginViewState extends State<LoginView>
   @override
   void dispose() {
     _tabController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -32,13 +35,14 @@ class _LoginViewState extends State<LoginView>
       appBar: AppBar(
         title: const Text("Login", style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: const Color(0xFFB55C50), // Reddish-brown AppBar color
+        backgroundColor: const Color(0xFFB55C50),
         elevation: 4,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           children: [
+            // Tab Bar Section
             Container(
               margin: const EdgeInsets.symmetric(vertical: 20),
               decoration: BoxDecoration(
@@ -58,7 +62,7 @@ class _LoginViewState extends State<LoginView>
                   color: const Color(0xFFFFD8D3),
                   borderRadius: BorderRadius.circular(25),
                 ),
-                labelColor: Colors.black, // Dark text color for selected tab
+                labelColor: Colors.black,
                 labelStyle: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -70,6 +74,7 @@ class _LoginViewState extends State<LoginView>
                 ],
               ),
             ),
+            // Tab Bar View
             Expanded(
               child: TabBarView(
                 controller: _tabController,
@@ -148,41 +153,25 @@ class _LoginViewState extends State<LoginView>
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
+                    // Login validation
                     if (emailController.text == 'admin' &&
                         passwordController.text == 'admin') {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Login Successful'),
-                          content: Text('Welcome, $userType!'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
+                      MySnackBar.showSuccessSnackbar(
+                          context, 'Welcome, $userType!');
+
+                      // Navigate to respective pages
+                      if (userType == 'Pet Owner') {
+                        Navigator.pushReplacementNamed(context, '/petowner');
+                      } else if (userType == 'Pet Sitter') {
+                        Navigator.pushReplacementNamed(context, '/petsitter');
+                      }
                     } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Login Failed'),
-                          content: const Text(
-                              'Invalid credentials. Please try again.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
+                      MySnackBar.showErrorSnackbar(
+                          context, 'Invalid credentials. Please try again.');
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFFB55C50), // Reddish-brown button color
+                    backgroundColor: const Color(0xFFB55C50),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
