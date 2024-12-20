@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pawpal/common/my_snackbar.dart';
+import 'package:pawpal/core/common/my_snackbar.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -33,7 +33,9 @@ class _LoginViewState extends State<LoginView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login", style: TextStyle(color: Colors.white)),
+        title: const Text("Login",
+            style:
+                TextStyle(color: Colors.white, fontFamily: 'Montserrat Bold')),
         centerTitle: true,
         backgroundColor: const Color(0xFFB55C50),
         elevation: 4,
@@ -94,109 +96,111 @@ class _LoginViewState extends State<LoginView>
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Center(
-        child: Card(
-          elevation: 8,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  icon,
-                  color: const Color(0xFFB55C50),
-                  size: 40,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  "$userType Login",
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFB55C50),
+        child: SingleChildScrollView(
+          child: Card(
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    color: const Color(0xFFB55C50),
+                    size: 40,
                   ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: "Email",
-                    labelStyle: const TextStyle(color: Colors.black45),
-                    prefixIcon:
-                        const Icon(Icons.email, color: Color(0xFFB55C50)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  const SizedBox(height: 16),
+                  Text(
+                    "$userType Login",
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFB55C50),
                     ),
-                    filled: true,
-                    fillColor: Colors.grey[200],
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    labelStyle: const TextStyle(color: Colors.black45),
-                    prefixIcon:
-                        const Icon(Icons.lock, color: Color(0xFFB55C50)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      labelStyle: const TextStyle(color: Colors.black45),
+                      prefixIcon:
+                          const Icon(Icons.email, color: Color(0xFFB55C50)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[200],
                     ),
-                    filled: true,
-                    fillColor: Colors.grey[200],
+                    keyboardType: TextInputType.emailAddress,
                   ),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    // Login validation
-                    if (emailController.text == 'admin' &&
-                        passwordController.text == 'admin') {
-                      MySnackBar.showSuccessSnackbar(
-                          context, 'Welcome, $userType!');
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      labelStyle: const TextStyle(color: Colors.black45),
+                      prefixIcon:
+                          const Icon(Icons.lock, color: Color(0xFFB55C50)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Login validation
+                      if (emailController.text == 'admin' &&
+                          passwordController.text == 'admin') {
+                        MySnackBar.showSuccessSnackbar(
+                            context, 'Welcome, $userType!');
 
-                      // Navigate to respective pages
-                      if (userType == 'Pet Owner') {
-                        Navigator.pushReplacementNamed(context, '/petowner');
-                      } else if (userType == 'Pet Sitter') {
-                        Navigator.pushReplacementNamed(context, '/petsitter');
+                        // Navigate to respective pages
+                        if (userType == 'Pet Owner') {
+                          Navigator.pushReplacementNamed(context, '/petowner');
+                        } else if (userType == 'Pet Sitter') {
+                          Navigator.pushReplacementNamed(context, '/petsitter');
+                        }
+                      } else {
+                        MySnackBar.showErrorSnackbar(
+                            context, 'Invalid credentials. Please try again.');
                       }
-                    } else {
-                      MySnackBar.showErrorSnackbar(
-                          context, 'Invalid credentials. Please try again.');
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFB55C50),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFB55C50),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                        horizontal: 32,
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                      horizontal: 32,
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(fontSize: 16),
                     ),
                   ),
-                  child: const Text(
-                    "Login",
-                    style: TextStyle(fontSize: 16),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                    child: const Text(
+                      "Don't have an account? Register",
+                      style: TextStyle(color: Color(0xFFB55C50)),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/register');
-                  },
-                  child: const Text(
-                    "Don't have an account? Register",
-                    style: TextStyle(color: Color(0xFFB55C50)),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
