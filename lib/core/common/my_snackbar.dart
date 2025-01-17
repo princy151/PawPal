@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 
-class MySnackBar {
-  static void showSuccessSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
-  static void showErrorSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
+showMySnackBar({
+  required BuildContext context,
+  required String message,
+  Color? color,
+}) {
+  ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      backgroundColor: color ?? Colors.green,
+      duration: const Duration(seconds: 1),
+      behavior: SnackBarBehavior.floating,
+    ),
+  );
 }

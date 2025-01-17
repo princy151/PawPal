@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pawpal/app/di/di.dart';
 import 'package:pawpal/core/theme/app_theme.dart';
-import 'package:pawpal/core/common/splash_screen.dart';
-import 'package:pawpal/features/auth/presentation/view/login_view.dart';
-import 'package:pawpal/features/auth/presentation/view/onboarding_view.dart';
-import 'package:pawpal/features/home/presentation/view/pet_owner_dashboard_view.dart';
-import 'package:pawpal/features/home/presentation/view/pet_sitter_dashboard_view.dart';
-import 'package:pawpal/features/auth/presentation/view/registration_view.dart';
+import 'package:pawpal/features/splash/presentation/view/splash_screen.dart';
+import 'package:pawpal/features/splash/presentation/view_model/splash_cubit.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      title: 'PawPal',
       theme: getApplicationTheme(),
-      routes: {
-        '/': (context) => const SplashScreen(),
-        '/onboard': (context) => const OnboardingScreen(),
-        '/login': (context) => const LoginView(),
-        '/register': (context) => const RegistrationView(),
-        '/petsitter': (context) => const PetSitterDashboardView(),
-        '/petowner': (context) => const PetOwnerDashboardView(),
-      },
+      home: BlocProvider.value(
+        value: getIt<SplashCubit>(),
+        child: SplashView(),
+      ),
     );
   }
 }

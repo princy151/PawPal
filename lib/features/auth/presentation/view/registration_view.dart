@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pawpal/features/auth/presentation/view_model/owner_signup/owner_signup_bloc.dart';
 
 class RegistrationView extends StatefulWidget {
   const RegistrationView({super.key});
@@ -230,28 +232,28 @@ class _RegistrationViewState extends State<RegistrationView>
                             : null,
                       ),
                       const SizedBox(height: 16),
-                      TextFormField(
-                        controller: petWeightController,
-                        decoration: InputDecoration(
-                          labelText: "Pet Weight (kg)",
-                          prefixIcon:
-                              const Icon(Icons.scale, color: Color(0xFFB55C50)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Pet weight is required";
-                          }
-                          if (double.tryParse(value) == null) {
-                            return "Enter a valid number";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
+                      // TextFormField(
+                      //   controller: petWeightController,
+                      //   decoration: InputDecoration(
+                      //     labelText: "Pet Weight (kg)",
+                      //     prefixIcon:
+                      //         const Icon(Icons.scale, color: Color(0xFFB55C50)),
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //     ),
+                      //   ),
+                      //   keyboardType: TextInputType.number,
+                      //   validator: (value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       return "Pet weight is required";
+                      //     }
+                      //     if (double.tryParse(value) == null) {
+                      //       return "Enter a valid number";
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
+                      // const SizedBox(height: 16),
                     ],
                     if (!isPetOwner) ...[
                       TextFormField(
@@ -299,26 +301,38 @@ class _RegistrationViewState extends State<RegistrationView>
                           ? "Address is required"
                           : null,
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: dobController,
-                      decoration: InputDecoration(
-                        labelText: "Date of Birth",
-                        prefixIcon: const Icon(Icons.calendar_today,
-                            color: Color(0xFFB55C50)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      keyboardType: TextInputType.datetime,
-                      validator: (value) => value == null || value.isEmpty
-                          ? "Date of birth is required"
-                          : null,
-                    ),
+                    // const SizedBox(height: 16),
+                    // TextFormField(
+                    //   controller: dobController,
+                    //   decoration: InputDecoration(
+                    //     labelText: "Date of Birth",
+                    //     prefixIcon: const Icon(Icons.calendar_today,
+                    //         color: Color(0xFFB55C50)),
+                    //     border: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(12),
+                    //     ),
+                    //   ),
+                    //   keyboardType: TextInputType.datetime,
+                    //   validator: (value) => value == null || value.isEmpty
+                    //       ? "Date of birth is required"
+                    //       : null,
+                    // ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        if (formKey.currentState!.validate()) {}
+                        if (formKey.currentState!.validate()) {
+                          context.read<OwnerSignupBloc>().add(
+                                RegisterOwner(
+                                  context: context,
+                                  name: ownerNameController.text,
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                  petname: petNameController.text,
+                                  type: petTypeController.text,
+                                  address: addressController.text,
+                                ),
+                              );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFB55C50),

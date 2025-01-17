@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pawpal/core/common/my_snackbar.dart';
+import 'package:pawpal/features/home/presentation/view_model/pet_owner_dashboard_cubit.dart';
 
 class PetOwnerDashboardView extends StatefulWidget {
   const PetOwnerDashboardView({super.key});
@@ -31,7 +34,13 @@ class _PetOwnerDashboardViewState extends State<PetOwnerDashboardView> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/login');
+              showMySnackBar(
+                context: context,
+                message: 'Logging out...',
+                color: Colors.red,
+              );
+
+              context.read<PetOwnerDashboardCubit>().logout(context);
             },
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pawpal/core/common/my_snackbar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pawpal/features/auth/presentation/view/registration_view.dart';
+import 'package:pawpal/features/auth/presentation/view_model/owner_login/owner_login_bloc.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
 
   @override
   _LoginViewState createState() => _LoginViewState();
@@ -125,10 +127,10 @@ class _LoginViewState extends State<LoginView>
                   TextField(
                     controller: emailController,
                     decoration: InputDecoration(
-                      labelText: "Email",
+                      labelText: "Username",
                       labelStyle: const TextStyle(color: Colors.black45),
                       prefixIcon:
-                          const Icon(Icons.email, color: Color(0xFFB55C50)),
+                          const Icon(Icons.person, color: Color(0xFFB55C50)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -157,21 +159,28 @@ class _LoginViewState extends State<LoginView>
                   ElevatedButton(
                     onPressed: () {
                       // Login validation
-                      if (emailController.text == 'admin' &&
-                          passwordController.text == 'admin') {
-                        MySnackBar.showSuccessSnackbar(
-                            context, 'Welcome, $userType!');
+                      // if (emailController.text == 'admin' &&
+                      //     passwordController.text == 'admin') {
+                      //   showMySnackBar.showSuccessSnackbar(
+                      //       context, 'Welcome, $userType!');
 
-                        // Navigate to respective pages
-                        if (userType == 'Pet Owner') {
-                          Navigator.pushReplacementNamed(context, '/petowner');
-                        } else if (userType == 'Pet Sitter') {
-                          Navigator.pushReplacementNamed(context, '/petsitter');
-                        }
-                      } else {
-                        MySnackBar.showErrorSnackbar(
-                            context, 'Invalid credentials. Please try again.');
-                      }
+                      //   // Navigate to respective pages
+                      //   if (userType == 'Pet Owner') {
+                      //     Navigator.pushReplacementNamed(context, '/petowner');
+                      //   } else if (userType == 'Pet Sitter') {
+                      //     Navigator.pushReplacementNamed(context, '/petsitter');
+                      //   }
+                      // } else {
+                      //   MySnackBar.showErrorSnackbar(
+                      //       context, 'Invalid credentials. Please try again.');
+                      // }
+                      context.read<OwnerLoginBloc>().add(
+                            LoginOwnerEvent(
+                              context: context,
+                              username: emailController.text,
+                              password: passwordController.text,
+                            ),
+                          );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFB55C50),
@@ -192,7 +201,12 @@ class _LoginViewState extends State<LoginView>
                   const SizedBox(height: 12),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/register');
+                      context.read<OwnerLoginBloc>().add(
+                            NavigateRegisterScreenEvent(
+                              destination: RegistrationView(),
+                              context: context,
+                            ),
+                          );
                     },
                     child: const Text(
                       "Don't have an account? Register",
