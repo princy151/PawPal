@@ -127,10 +127,10 @@ class _LoginViewState extends State<LoginView>
                   TextField(
                     controller: emailController,
                     decoration: InputDecoration(
-                      labelText: "Username",
+                      labelText: "Email",
                       labelStyle: const TextStyle(color: Colors.black45),
                       prefixIcon:
-                          const Icon(Icons.person, color: Color(0xFFB55C50)),
+                          const Icon(Icons.email, color: Color(0xFFB55C50)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

@@ -12,6 +12,7 @@ class OwnerRegisterUserParams extends Equatable {
   final String petname;
   final String type;
   final String address;
+  final String? image;
 
   const OwnerRegisterUserParams({
     required this.name,
@@ -20,6 +21,7 @@ class OwnerRegisterUserParams extends Equatable {
     required this.petname,
     required this.type,
     required this.address,
+    this.image,
   });
 
   //intial constructor
@@ -30,13 +32,16 @@ class OwnerRegisterUserParams extends Equatable {
     required this.petname,
     required this.type,
     required this.address,
+    this.image,
   });
 
   @override
-  List<Object?> get props => [name, email, password, petname, type, address];
+  List<Object?> get props =>
+      [name, email, password, petname, type, address, image];
 }
 
-class OwnerRegisterUsecase implements UsecaseWithParams<void, OwnerRegisterUserParams> {
+class OwnerRegisterUsecase
+    implements UsecaseWithParams<void, OwnerRegisterUserParams> {
   final IOwnerRepository repository;
 
   OwnerRegisterUsecase(this.repository);
@@ -50,6 +55,7 @@ class OwnerRegisterUsecase implements UsecaseWithParams<void, OwnerRegisterUserP
       petname: params.petname,
       type: params.type,
       address: params.address,
+      image: params.image,
     );
     return repository.registerOwner(ownerEntity);
   }

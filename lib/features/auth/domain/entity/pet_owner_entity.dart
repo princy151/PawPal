@@ -8,6 +8,7 @@ class PetOwnerEntity extends Equatable {
   final String petname;
   final String type;
   final String address;
+  final String? image;
 
   const PetOwnerEntity({
     this.ownerId,
@@ -17,9 +18,10 @@ class PetOwnerEntity extends Equatable {
     required this.petname,
     required this.type,
     required this.address,
+    this.image,
   });
 
   @override
   List<Object?> get props =>
-      [ownerId, name, email, password, petname, type, address];
+      [ownerId, name, email, password, petname, type, address, image];
 }
