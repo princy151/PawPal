@@ -6,7 +6,6 @@ import 'package:pawpal/features/auth/data/datasource/remote_data_source/owner_re
 import 'package:pawpal/features/auth/domain/entity/pet_owner_entity.dart';
 import 'package:pawpal/features/auth/domain/repository/owner_repository.dart';
 
-
 class OwnerRemoteRepository implements IOwnerRepository {
   final OwnerRemoteDataSource _ownerRemoteDatasource;
   OwnerRemoteRepository(this._ownerRemoteDatasource);
@@ -20,8 +19,8 @@ class OwnerRemoteRepository implements IOwnerRepository {
   Future<Either<Failure, String>> loginOwner(
       String email, String password) async {
     try {
-      final result = await _ownerRemoteDatasource.loginOwner(email, password);
-      return Right(result);
+      final token = await _ownerRemoteDatasource.loginOwner(email, password);
+      return Right(token);
     } catch (e) {
       return Left(LocalDatabaseFailure(message: e.toString()));
     }
