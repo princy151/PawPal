@@ -13,6 +13,8 @@ import 'package:pawpal/features/auth/domain/use_case/upload_image_usecase.dart';
 import 'package:pawpal/features/auth/presentation/view_model/owner_login/owner_login_bloc.dart';
 import 'package:pawpal/features/auth/presentation/view_model/owner_signup/owner_signup_bloc.dart';
 import 'package:pawpal/features/home/presentation/view_model/pet_owner_dashboard_cubit.dart';
+import 'package:pawpal/features/splash/presentation/view/onboarding_view.dart';
+import 'package:pawpal/features/splash/presentation/view_model/onboarding_cubit.dart';
 import 'package:pawpal/features/splash/presentation/view_model/splash_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +28,7 @@ Future<void> initDependencies() async {
   await _initHomeDependencies();
   await _initRegisterDependencies();
   await _initLoginDependencies();
-
+  await _initOnboardingScreenDependencies();
   await _initSplashScreenDependencies();
 }
 
@@ -117,6 +119,12 @@ _initLoginDependencies() async {
 
 _initSplashScreenDependencies() async {
   getIt.registerFactory<SplashCubit>(
-    () => SplashCubit(getIt<OwnerLoginBloc>()),
+    () => SplashCubit(getIt<OnboardingCubit>()),
+  );
+}
+
+_initOnboardingScreenDependencies() async {
+  getIt.registerFactory<OnboardingCubit>(
+    () => OnboardingCubit(),
   );
 }
