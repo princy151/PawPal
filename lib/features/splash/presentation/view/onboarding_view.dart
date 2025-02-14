@@ -134,6 +134,8 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pawpal/features/splash/presentation/view_model/onboarding_cubit.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -244,7 +246,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           TextButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/login');
+              context.read<OnboardingCubit>().goToLogin(context);
             },
             child: const Text(
               'Skip',
@@ -277,7 +279,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPressed: () {
                   if (currentPage == 3) {
                     // Navigate to login on the last page
-                    Navigator.pushReplacementNamed(context, '/login');
+                    context.read<OnboardingCubit>().goToLogin(context);
                   } else {
                     // Move to the next page
                     _controller.nextPage(
