@@ -3,23 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pawpal/core/common/my_snackbar.dart';
 import 'package:pawpal/features/auth/domain/use_case/owner_login_usecase.dart';
-import 'package:pawpal/features/auth/presentation/view_model/owner_signup/owner_signup_bloc.dart';
-import 'package:pawpal/features/home/presentation/view/pet_owner_dashboard_view.dart';
-import 'package:pawpal/features/home/presentation/view_model/pet_owner_dashboard_cubit.dart';
+import 'package:pawpal/features/auth/presentation/view_model/signup/owner_signup_bloc.dart';
+import 'package:pawpal/features/auth/presentation/view_model/signup/sitter_signup_bloc.dart';
+import 'package:pawpal/features/home/presentation/view/owner_home.dart';
+import 'package:pawpal/features/home/presentation/view_model/pet_owner_home_cubit.dart';
 
 part 'owner_login_event.dart';
 part 'owner_login_state.dart';
 
 class OwnerLoginBloc extends Bloc<LoginEvent, LoginState> {
   final OwnerSignupBloc _ownerRegisterBloc;
-  final PetOwnerDashboardCubit _petOwnerDashboardCubit;
+  final SitterSignupBloc _sitterRegisterBloc;
+  final OwnerHomeCubit _petOwnerDashboardCubit;
   final OwnerLoginUseCase _loginUseCase;
 
   OwnerLoginBloc({
     required OwnerSignupBloc ownerRegisterBloc,
-    required PetOwnerDashboardCubit petOwnerDashboardCubit,
+    required SitterSignupBloc sitterRegisterBloc,
+    required OwnerHomeCubit petOwnerDashboardCubit,
     required OwnerLoginUseCase ownerLoginUseCase,
   })  : _ownerRegisterBloc = ownerRegisterBloc,
+        _sitterRegisterBloc = sitterRegisterBloc,
         _petOwnerDashboardCubit = petOwnerDashboardCubit,
         _loginUseCase = ownerLoginUseCase,
         super(LoginState.initial()) {
@@ -31,6 +35,7 @@ class OwnerLoginBloc extends Bloc<LoginEvent, LoginState> {
             builder: (context) => MultiBlocProvider(
               providers: [
                 BlocProvider.value(value: _ownerRegisterBloc),
+                BlocProvider.value(value: _sitterRegisterBloc),
               ],
               child: event.destination,
             ),
@@ -77,7 +82,7 @@ class OwnerLoginBloc extends Bloc<LoginEvent, LoginState> {
             add(
               NavigateHomeScreenEvent(
                 context: event.context,
-                destination: PetOwnerDashboardView(),
+                destination: HomeView(),
               ),
             );
             //_homeCubit.setToken(token);

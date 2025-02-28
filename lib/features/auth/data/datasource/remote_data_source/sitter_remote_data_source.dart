@@ -2,35 +2,25 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pawpal/app/constants/api_endpoints.dart';
-import 'package:pawpal/features/auth/data/datasource/owner_data_source.dart';
-import 'package:pawpal/features/auth/domain/entity/pet_owner_entity.dart';
+import 'package:pawpal/features/auth/data/datasource/sitter_data_source.dart';
+import 'package:pawpal/features/auth/domain/entity/pet_sitter_entity.dart';
 
-class OwnerRemoteDataSource implements IOwnerDataSource {
+class SitterRemoteDataSource implements ISitterDataSource {
   final Dio _dio;
-  OwnerRemoteDataSource(this._dio);
+  SitterRemoteDataSource(this._dio);
 
   @override
-  Future<void> registerOwner(PetOwnerEntity owner) async {
+  Future<void> registerSitter(PetSitterEntity sitter) async {
     try {
       Response response = await _dio.post(
-        ApiEndpoints.register,
+        ApiEndpoints.sitterregister,
         data: {
-          "name": owner.name,
-          "email": owner.email,
-          "phone": owner.phone,
-          "address": owner.address,
-          "image": owner.image,
-          "password": owner.password,
-          "pets": owner.pets
-              .map((pet) => {
-                    "petname": pet.petname,
-                    "type": pet.type,
-                    "petimage": pet.petimage,
-                    "petinfo": pet.petinfo,
-                    "openbooking": pet.openbooking,
-                    "booked": pet.booked,
-                  })
-              .toList(),
+          "name": sitter.name,
+          "email": sitter.email,
+          "phone": sitter.phone,
+          "address": sitter.address,
+          "image": sitter.image,
+          "password": sitter.password,
         },
       );
 
@@ -52,15 +42,15 @@ class OwnerRemoteDataSource implements IOwnerDataSource {
   }
 
   @override
-  Future<PetOwnerEntity> getCurrentUser() {
+  Future<PetSitterEntity> getCurrentUser() {
     throw UnimplementedError();
   }
 
   @override
-  Future<String> loginOwner(String email, String password) async {
+  Future<String> loginSitter(String email, String password) async {
     try {
       Response response = await _dio.post(
-        ApiEndpoints.login,
+        ApiEndpoints.sitterlogin,
         data: {
           "email": email,
           "password": password,

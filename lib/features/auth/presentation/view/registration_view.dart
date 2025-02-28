@@ -3,7 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pawpal/features/auth/presentation/view_model/owner_signup/owner_signup_bloc.dart';
+import 'package:pawpal/core/common/my_snackbar.dart';
+import 'package:pawpal/features/auth/domain/entity/pet_owner_entity.dart';
+import 'package:pawpal/features/auth/presentation/view_model/signup/owner_signup_bloc.dart'
+    as owner;
+import 'package:pawpal/features/auth/presentation/view_model/signup/sitter_signup_bloc.dart'
+    as sitter;
 import 'package:permission_handler/permission_handler.dart';
 
 class RegistrationView extends StatefulWidget {
@@ -30,6 +35,11 @@ class _RegistrationViewState extends State<RegistrationView>
   TextEditingController addressController = TextEditingController();
   TextEditingController dobController = TextEditingController();
 
+  bool isPetAdded = false; // Flag to track if pet form is expanded
+
+  File? _profileImg;
+  File? _petImg; // New image for pet
+
   checkCameraPermission() async {
     if (await Permission.camera.request().isRestricted ||
         await Permission.camera.request().isDenied) {
@@ -37,20 +47,24 @@ class _RegistrationViewState extends State<RegistrationView>
     }
   }
 
-  File? _img;
-  Future _browseImage(ImageSource imageSource) async {
+  Future _browseImage(ImageSource imageSource, bool isProfile) async {
     try {
       final image = await ImagePicker().pickImage(source: imageSource);
       if (image != null) {
         setState(() {
-          _img = File(image.path);
-          //Send image to server
-          context.read<OwnerSignupBloc>().add(
-                LoadImage(file: _img!),
-              );
+          if (isProfile) {
+            _profileImg = File(image.path);
+            // Send profile image to server
+            context
+                .read<owner.OwnerSignupBloc>()
+                .add(owner.LoadImage(file: _profileImg!));
+          } else {
+            _petImg = File(image.path); // Set pet image
+            context
+                .read<owner.OwnerSignupBloc>()
+                .add(owner.LoadPetImage(file: _petImg!));
+          }
         });
-      } else {
-        return;
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -148,6 +162,7 @@ class _RegistrationViewState extends State<RegistrationView>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Profile Image Picker
                     InkWell(
                       onTap: () {
                         showModalBottomSheet(
@@ -167,7 +182,7 @@ class _RegistrationViewState extends State<RegistrationView>
                                 ElevatedButton.icon(
                                   onPressed: () {
                                     checkCameraPermission();
-                                    _browseImage(ImageSource.camera);
+                                    _browseImage(ImageSource.camera, true);
                                     Navigator.pop(context);
                                   },
                                   icon: const Icon(Icons.camera,
@@ -187,7 +202,7 @@ class _RegistrationViewState extends State<RegistrationView>
                                 ),
                                 ElevatedButton.icon(
                                   onPressed: () {
-                                    _browseImage(ImageSource.gallery);
+                                    _browseImage(ImageSource.gallery, true);
                                     Navigator.pop(context);
                                   },
                                   icon: const Icon(Icons.image,
@@ -215,8 +230,8 @@ class _RegistrationViewState extends State<RegistrationView>
                         width: 200,
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundImage: _img != null
-                              ? FileImage(_img!)
+                          backgroundImage: _profileImg != null
+                              ? FileImage(_profileImg!)
                               : const AssetImage('assets/images/profile.jpg')
                                   as ImageProvider,
                         ),
@@ -232,6 +247,7 @@ class _RegistrationViewState extends State<RegistrationView>
                       ),
                     ),
                     const SizedBox(height: 20),
+                    // Name Field
                     if (isPetOwner)
                       TextFormField(
                         controller: ownerNameController,
@@ -263,6 +279,7 @@ class _RegistrationViewState extends State<RegistrationView>
                             : null,
                       ),
                     const SizedBox(height: 16),
+                    // Email Field
                     TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
@@ -285,6 +302,7 @@ class _RegistrationViewState extends State<RegistrationView>
                       },
                     ),
                     const SizedBox(height: 16),
+                    // Password Field
                     TextFormField(
                       controller: passwordController,
                       decoration: InputDecoration(
@@ -301,92 +319,24 @@ class _RegistrationViewState extends State<RegistrationView>
                           : null,
                     ),
                     const SizedBox(height: 20),
-                    if (isPetOwner) ...[
-                      TextFormField(
-                        controller: petNameController,
-                        decoration: InputDecoration(
-                          labelText: "Pet Name",
-                          prefixIcon:
-                              const Icon(Icons.pets, color: Color(0xFFB55C50)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                    // Phone Number Field (for both Pet Owner and Pet Sitter)
+                    TextFormField(
+                      controller: phoneController,
+                      decoration: InputDecoration(
+                        labelText: "Phone Number",
+                        prefixIcon:
+                            const Icon(Icons.phone, color: Color(0xFFB55C50)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Pet name is required"
-                            : null,
                       ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: petTypeController,
-                        decoration: InputDecoration(
-                          labelText: "Pet Type",
-                          prefixIcon:
-                              const Icon(Icons.pets, color: Color(0xFFB55C50)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Pet type is required"
-                            : null,
-                      ),
-                      const SizedBox(height: 16),
-                      // TextFormField(
-                      //   controller: petWeightController,
-                      //   decoration: InputDecoration(
-                      //     labelText: "Pet Weight (kg)",
-                      //     prefixIcon:
-                      //         const Icon(Icons.scale, color: Color(0xFFB55C50)),
-                      //     border: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(12),
-                      //     ),
-                      //   ),
-                      //   keyboardType: TextInputType.number,
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return "Pet weight is required";
-                      //     }
-                      //     if (double.tryParse(value) == null) {
-                      //       return "Enter a valid number";
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
-                      // const SizedBox(height: 16),
-                    ],
-                    if (!isPetOwner) ...[
-                      TextFormField(
-                        controller: experienceController,
-                        decoration: InputDecoration(
-                          labelText: "Experience",
-                          prefixIcon:
-                              const Icon(Icons.star, color: Color(0xFFB55C50)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Experience is required"
-                            : null,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: sitterTypeController,
-                        decoration: InputDecoration(
-                          labelText: "Sitter Type (e.g., Full-time)",
-                          prefixIcon: const Icon(Icons.people,
-                              color: Color(0xFFB55C50)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Sitter type is required"
-                            : null,
-                      ),
-                    ],
+                      keyboardType: TextInputType.phone,
+                      validator: (value) => value == null || value.isEmpty
+                          ? "Phone number is required"
+                          : null,
+                    ),
                     const SizedBox(height: 16),
+                    // Address Field
                     TextFormField(
                       controller: addressController,
                       decoration: InputDecoration(
@@ -401,41 +351,215 @@ class _RegistrationViewState extends State<RegistrationView>
                           ? "Address is required"
                           : null,
                     ),
-                    // const SizedBox(height: 16),
-                    // TextFormField(
-                    //   controller: dobController,
-                    //   decoration: InputDecoration(
-                    //     labelText: "Date of Birth",
-                    //     prefixIcon: const Icon(Icons.calendar_today,
-                    //         color: Color(0xFFB55C50)),
-                    //     border: OutlineInputBorder(
-                    //       borderRadius: BorderRadius.circular(12),
-                    //     ),
-                    //   ),
-                    //   keyboardType: TextInputType.datetime,
-                    //   validator: (value) => value == null || value.isEmpty
-                    //       ? "Date of birth is required"
-                    //       : null,
-                    // ),
+                    const SizedBox(height: 16),
+                    // Pet Owner Specific Fields
+                    if (isPetOwner) ...[
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            isPetAdded = !isPetAdded;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFB55C50),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 60, vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          isPetAdded ? "Remove Pet" : "Add Pet",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      if (isPetAdded) ...[
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: petNameController,
+                          decoration: InputDecoration(
+                            labelText: "Pet's Name",
+                            prefixIcon: const Icon(Icons.pets,
+                                color: Color(0xFFB55C50)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          validator: (value) => value == null || value.isEmpty
+                              ? "Pet's name is required"
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: petTypeController,
+                          decoration: InputDecoration(
+                            labelText: "Pet Type",
+                            prefixIcon: const Icon(Icons.pets,
+                                color: Color(0xFFB55C50)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          validator: (value) => value == null || value.isEmpty
+                              ? "Pet type is required"
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.black,
+                              context: context,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20),
+                                ),
+                              ),
+                              builder: (context) => Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    ElevatedButton.icon(
+                                      onPressed: () {
+                                        checkCameraPermission();
+                                        _browseImage(ImageSource.camera, false);
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(Icons.camera,
+                                          color: Colors.white),
+                                      label: const Text(
+                                        'Camera',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        disabledForegroundColor:
+                                            Colors.white.withOpacity(0.38),
+                                        disabledBackgroundColor:
+                                            Colors.white.withOpacity(0.12),
+                                        side: const BorderSide(
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    ElevatedButton.icon(
+                                      onPressed: () {
+                                        _browseImage(
+                                            ImageSource.gallery, false);
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(Icons.image,
+                                          color: Colors.white),
+                                      label: const Text(
+                                        'Gallery',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        disabledForegroundColor:
+                                            Colors.white.withOpacity(0.38),
+                                        disabledBackgroundColor:
+                                            Colors.white.withOpacity(0.12),
+                                        side: const BorderSide(
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          child: SizedBox(
+                            height: 150,
+                            width: 150,
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: _petImg != null
+                                  ? FileImage(_petImg!)
+                                  : const AssetImage(
+                                          'assets/images/profile.jpg')
+                                      as ImageProvider,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: petWeightController,
+                          decoration: InputDecoration(
+                            labelText: "Pet's Info",
+                            prefixIcon: const Icon(Icons.info_outline,
+                                color: Color(0xFFB55C50)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          validator: (value) => value == null || value.isEmpty
+                              ? "Pet info is required"
+                              : null,
+                        ),
+                      ],
+                    ],
                     const SizedBox(height: 20),
+                    // Register Button
                     ElevatedButton(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
                           final registerState =
-                              context.read<OwnerSignupBloc>().state;
-                          final imageName = registerState.imageName;
-                          context.read<OwnerSignupBloc>().add(
-                                RegisterOwner(
-                                  context: context,
-                                  name: ownerNameController.text,
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                  petname: petNameController.text,
-                                  type: petTypeController.text,
-                                  address: addressController.text,
-                                  image: imageName,
-                                ),
+                              context.read<owner.OwnerSignupBloc>().state;
+
+                          if (isPetOwner) {
+                            // Handle Pet Owner registration
+                            if (isPetAdded && registerState.petImage == null) {
+                              showMySnackBar(
+                                context: context,
+                                message:
+                                    "Please upload a pet image before registering.",
                               );
+                              return;
+                            }
+                            final imageName = registerState.imageName;
+                            final petImage = registerState.petImage;
+                            context.read<owner.OwnerSignupBloc>().add(
+                                  owner.RegisterOwner(
+                                    context: context,
+                                    name: ownerNameController.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                    address: addressController.text,
+                                    phone: phoneController.text,
+                                    image: imageName,
+                                    pets: [
+                                      PetEntity(
+                                        petname: petNameController.text,
+                                        type: petTypeController.text,
+                                        petimage: petImage,
+                                        petinfo: petWeightController.text,
+                                        openbooking: 'no',
+                                        booked: 'no',
+                                      ),
+                                    ],
+                                  ),
+                                );
+                          } else {
+                            // Handle Pet Sitter registration
+                            final imageName = registerState.imageName;
+                            context.read<sitter.SitterSignupBloc>().add(
+                                  sitter.RegisterSitter(
+                                    context: context,
+                                    name: sitterNameController.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                    address: addressController.text,
+                                    phone: phoneController.text,
+                                    image: imageName,
+                                  ),
+                                );
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -455,9 +579,10 @@ class _RegistrationViewState extends State<RegistrationView>
                       ),
                     ),
                     const SizedBox(height: 16),
+                    // Login Button
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/login');
+                        Navigator.pop(context);
                       },
                       child: const Text(
                         "Already have an account? Login",
