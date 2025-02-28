@@ -4,39 +4,41 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:pawpal/core/common/my_snackbar.dart';
-import 'package:pawpal/features/auth/domain/use_case/owner_register_usecase.dart';
+import 'package:pawpal/features/auth/domain/entity/pet_sitter_entity.dart';
+import 'package:pawpal/features/auth/domain/use_case/sitter_register_usecase.dart';
 import 'package:pawpal/features/auth/domain/use_case/upload_image_usecase.dart';
 
-part 'owner_signup_event.dart';
-part 'owner_signup_state.dart';
+part 'sitter_signup_event.dart';
+part 'sitter_signup_state.dart';
 
-class OwnerSignupBloc extends Bloc<OwnerSignupEvent, OwnerSignupState> {
-  final OwnerRegisterUsecase _ownerRegisterUseCase;
+class SitterSignupBloc extends Bloc<SitterSignupEvent, SitterSignupState> {
+  final SitterRegisterUsecase _sitterRegisterUseCase;
   final UploadImageUsecase _uploadImageUsecase;
 
-  OwnerSignupBloc({
-    required OwnerRegisterUsecase ownerRegisterUsecase,
+  SitterSignupBloc({
+    required SitterRegisterUsecase sitterRegisterUsecase,
     required UploadImageUsecase uploadImageUsecase,
-  })  : _ownerRegisterUseCase = ownerRegisterUsecase,
+  })  : _sitterRegisterUseCase = sitterRegisterUsecase,
         _uploadImageUsecase = uploadImageUsecase,
-        super(OwnerSignupState.initial()) {
-    on<RegisterOwner>(_onOwnerRegisterEvent);
-    on<LoadImage>(_onLoadImage);
+        super(SitterSignupState.initial()) {
+    on<RegisterSitter>(_onSitterRegisterEvent);
+    on<LoadImage>(_onLoadImagee);
   }
 
-  void _onOwnerRegisterEvent(
-    RegisterOwner event,
-    Emitter<OwnerSignupState> emit,
+  void _onSitterRegisterEvent(
+    RegisterSitter event,
+    Emitter<SitterSignupState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    final result = await _ownerRegisterUseCase.call(OwnerRegisterUserParams(
+
+    final result = await _sitterRegisterUseCase.call(SitterRegisterUserParams(
       name: event.name,
       email: event.email,
-      password: event.password,
-      petname: event.petname,
-      type: event.type,
+      phone: event.phone,
       address: event.address,
-      image: state.imageName,
+      password: event.password,
+      image:
+          state.imageName, // Assuming the image name is passed from the state
     ));
 
     result.fold(
@@ -49,9 +51,9 @@ class OwnerSignupBloc extends Bloc<OwnerSignupEvent, OwnerSignupState> {
     );
   }
 
-  void _onLoadImage(
+  void _onLoadImagee(
     LoadImage event,
-    Emitter<OwnerSignupState> emit,
+    Emitter<SitterSignupState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
     final result = await _uploadImageUsecase.call(

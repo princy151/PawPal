@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pawpal/features/auth/presentation/view/registration_view.dart';
-import 'package:pawpal/features/auth/presentation/view_model/owner_login/owner_login_bloc.dart';
+import 'package:pawpal/features/auth/presentation/view_model/login/owner_login_bloc.dart'
+    as owner;
+import 'package:pawpal/features/auth/presentation/view_model/login/sitter_login_bloc.dart'
+    as sitter;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -158,29 +161,25 @@ class _LoginViewState extends State<LoginView>
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Login validation
-                      // if (emailController.text == 'admin' &&
-                      //     passwordController.text == 'admin') {
-                      //   showMySnackBar.showSuccessSnackbar(
-                      //       context, 'Welcome, $userType!');
-
-                      //   // Navigate to respective pages
-                      //   if (userType == 'Pet Owner') {
-                      //     Navigator.pushReplacementNamed(context, '/petowner');
-                      //   } else if (userType == 'Pet Sitter') {
-                      //     Navigator.pushReplacementNamed(context, '/petsitter');
-                      //   }
-                      // } else {
-                      //   MySnackBar.showErrorSnackbar(
-                      //       context, 'Invalid credentials. Please try again.');
-                      // }
-                      context.read<OwnerLoginBloc>().add(
-                            LoginOwnerEvent(
-                              context: context,
-                              username: emailController.text,
-                              password: passwordController.text,
-                            ),
-                          );
+                      if (userType == "Pet Owner") {
+                        // Trigger Pet Owner login event
+                        context.read<owner.OwnerLoginBloc>().add(
+                              owner.LoginOwnerEvent(
+                                context: context,
+                                username: emailController.text,
+                                password: passwordController.text,
+                              ),
+                            );
+                      } else if (userType == "Pet Sitter") {
+                        // Trigger Pet Sitter login event (different event)
+                        context.read<sitter.SitterLoginBloc>().add(
+                              sitter.LoginSitterEvent(
+                                context: context,
+                                username: emailController.text,
+                                password: passwordController.text,
+                              ),
+                            );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFB55C50),
@@ -201,12 +200,23 @@ class _LoginViewState extends State<LoginView>
                   const SizedBox(height: 12),
                   TextButton(
                     onPressed: () {
-                      context.read<OwnerLoginBloc>().add(
-                            NavigateRegisterScreenEvent(
-                              destination: RegistrationView(),
-                              context: context,
-                            ),
-                          );
+                      if (userType == "Pet Owner") {
+                        // Navigate to Pet Owner Registration Screen
+                        context.read<owner.OwnerLoginBloc>().add(
+                              owner.NavigateRegisterScreenEvent(
+                                destination: RegistrationView(),
+                                context: context,
+                              ),
+                            );
+                      } else if (userType == "Pet Sitter") {
+                        // Navigate to Pet Sitter Registration Screen (if applicable)
+                        context.read<sitter.SitterLoginBloc>().add(
+                              sitter.NavigateRegisterScreenEvent(
+                                destination: RegistrationView(),
+                                context: context,
+                              ),
+                            );
+                      }
                     },
                     child: const Text(
                       "Don't have an account? Register",

@@ -8,36 +8,25 @@ import 'package:pawpal/features/auth/domain/repository/owner_repository.dart';
 class OwnerRegisterUserParams extends Equatable {
   final String name;
   final String email;
-  final String password;
-  final String petname;
-  final String type;
+  final String phone;
   final String address;
+  final String password;
   final String? image;
+  final List<PetEntity> pets;
 
   const OwnerRegisterUserParams({
     required this.name,
     required this.email,
-    required this.password,
-    required this.petname,
-    required this.type,
+    required this.phone,
     required this.address,
-    this.image,
-  });
-
-  //intial constructor
-  const OwnerRegisterUserParams.initial({
-    required this.name,
-    required this.email,
     required this.password,
-    required this.petname,
-    required this.type,
-    required this.address,
     this.image,
+    this.pets = const [],
   });
 
   @override
   List<Object?> get props =>
-      [name, email, password, petname, type, address, image];
+      [name, email, phone, password, address, image, pets];
 }
 
 class OwnerRegisterUsecase
@@ -51,11 +40,11 @@ class OwnerRegisterUsecase
     final ownerEntity = PetOwnerEntity(
       name: params.name,
       email: params.email,
-      password: params.password,
-      petname: params.petname,
-      type: params.type,
+      phone: params.phone,
       address: params.address,
       image: params.image,
+      password: params.password,
+      pets: params.pets,
     );
     return repository.registerOwner(ownerEntity);
   }

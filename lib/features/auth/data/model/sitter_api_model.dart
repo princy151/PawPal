@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pawpal/features/auth/domain/entity/pet_owner_entity.dart';
+import 'package:pawpal/features/auth/domain/entity/pet_sitter_entity.dart';
 
-part 'auth_api_model.g.dart';
+part 'sitter_api_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class AuthApiModel extends Equatable {
@@ -14,7 +14,6 @@ class AuthApiModel extends Equatable {
   final String? image;
   final String address;
   final String password;
-  final List<PetEntity> pets;
 
   const AuthApiModel({
     this.id,
@@ -24,7 +23,6 @@ class AuthApiModel extends Equatable {
     required this.phone,
     required this.address,
     required this.password,
-    required this.pets,
   });
 
   factory AuthApiModel.fromJson(Map<String, dynamic> json) =>
@@ -33,34 +31,31 @@ class AuthApiModel extends Equatable {
   Map<String, dynamic> toJson() => _$AuthApiModelToJson(this);
 
   // To Entity
-  PetOwnerEntity toEntity() {
-    return PetOwnerEntity(
-      ownerId: id,
+  PetSitterEntity toEntity() {
+    return PetSitterEntity(
+      sitterId: id,
       name: name,
       email: email,
       phone: phone,
       address: address,
       password: password,
       image: image,
-      pets: pets,
     );
   }
 
   // From Entity
-  factory AuthApiModel.fromEntity(PetOwnerEntity entity) {
+  factory AuthApiModel.fromEntity(PetSitterEntity entity) {
     return AuthApiModel(
-      id: entity.ownerId,
+      id: entity.sitterId,
       image: entity.image,
       name: entity.name,
       email: entity.email,
       phone: entity.phone,
       address: entity.address,
       password: entity.password,
-      pets: entity.pets,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [id, name, email, phone, address, image, pets, password];
+  List<Object?> get props => [id, name, email, phone, address, image, password];
 }
