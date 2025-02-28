@@ -12,4 +12,5 @@ abstract interface class ISitterRepository {
   Future<Either<Failure, String>> uploadProfilePicture(File file);
 
   Future<Either<Failure, PetSitterEntity>> getCurrentUser();
+  Future<Either<Failure, List<PetSitterEntity>>> getSitters();
 }

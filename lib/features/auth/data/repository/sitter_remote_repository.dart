@@ -45,4 +45,19 @@ class SitterRemoteRepository implements ISitterRepository {
       return Left(LocalDatabaseFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<PetSitterEntity>>> getSitters() async {
+    try {
+      final sitters = await _sitterRemoteDatasource.getSitters();
+      return Right(sitters);
+    } catch (e) {
+      return Left(
+        ApiFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+  
 }
