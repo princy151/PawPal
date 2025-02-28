@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:pawpal/app/constants/api_endpoints.dart';
 import 'package:pawpal/features/auth/data/datasource/sitter_data_source.dart';
+import 'package:pawpal/features/auth/data/dto/get_all_sitters_dto.dart';
+import 'package:pawpal/features/auth/data/model/sitter_api_model.dart';
 import 'package:pawpal/features/auth/domain/entity/pet_sitter_entity.dart';
 
 class SitterRemoteDataSource implements ISitterDataSource {
@@ -93,6 +95,22 @@ class SitterRemoteDataSource implements ISitterDataSource {
       throw Exception(e);
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  @override
+  Future<List<PetSitterEntity>> getSitters() async {
+    try {
+      var response = await _dio.get(
+        ApiEndpoints.getAllSitters,
+      );
+
+      GetAllSittersDTO sitterDTO = GetAllSittersDTO.fromJson(response.data);
+      return AuthApiModel.toEntityList(sitterDTO.data);
+    } on DioException catch (e) {
+      throw Exception((e));
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

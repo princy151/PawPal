@@ -56,6 +56,9 @@ class AuthApiModel extends Equatable {
     );
   }
 
+  static List<PetSitterEntity> toEntityList(List<AuthApiModel> models) =>
+      models.map((model) => model.toEntity()).toList();
+
   @override
   List<Object?> get props => [id, name, email, phone, address, image, password];
 }

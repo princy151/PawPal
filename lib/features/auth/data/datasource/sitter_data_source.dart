@@ -10,4 +10,6 @@ abstract interface class ISitterDataSource {
   Future<PetSitterEntity> getCurrentUser();
 
   Future<String> uploadProfilePicture(File file);
+
+   Future<List<PetSitterEntity>> getSitters();
 }
