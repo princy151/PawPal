@@ -1,19 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_all_sitters_dto.dart';
+part of 'get_all_owners_dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-GetAllSittersDTO _$GetAllSittersDTOFromJson(Map<String, dynamic> json) =>
-    GetAllSittersDTO(
+GetAllOwnersDTO _$GetAllOwnersDTOFromJson(Map<String, dynamic> json) =>
+    GetAllOwnersDTO(
       data: (json['data'] as List<dynamic>)
-          .map((e) => SitterApiModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => AuthApiModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$GetAllSittersDTOToJson(GetAllSittersDTO instance) =>
+Map<String, dynamic> _$GetAllOwnersDTOToJson(GetAllOwnersDTO instance) =>
     <String, dynamic>{
       'data': instance.data,
     };

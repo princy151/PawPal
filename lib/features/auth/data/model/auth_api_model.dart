@@ -13,7 +13,7 @@ class AuthApiModel extends Equatable {
   final String phone;
   final String? image;
   final String address;
-  final String password;
+  final String? password;
   final List<PetEntity> pets;
 
   const AuthApiModel({
@@ -23,7 +23,7 @@ class AuthApiModel extends Equatable {
     required this.email,
     required this.phone,
     required this.address,
-    required this.password,
+    this.password,
     required this.pets,
   });
 
@@ -59,6 +59,9 @@ class AuthApiModel extends Equatable {
       pets: entity.pets,
     );
   }
+
+  static List<PetOwnerEntity> toEntityList(List<AuthApiModel> models) =>
+      models.map((model) => model.toEntity()).toList();
 
   @override
   List<Object?> get props =>

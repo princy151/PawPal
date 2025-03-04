@@ -44,4 +44,52 @@ class OwnerRemoteRepository implements IOwnerRepository {
       return Left(LocalDatabaseFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<PetOwnerEntity>>> getOwners() async {
+    try {
+      final owners = await _ownerRemoteDatasource.getOwners();
+      return Right(owners);
+    } catch (e) {
+      return Left(
+        ApiFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, PetOwnerEntity>> getCurrentOwner(
+      String? token, String userID) async {
+    try {
+      final user = await _ownerRemoteDatasource.getCurrentOwner(token, userID);
+      print("USERRR:: $user");
+      return Right(user);
+    } catch (e) {
+      return Left(ApiFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PetOwnerEntity>> updateOwner(PetOwnerEntity owner) async {
+    print('User update response:::::::');
+    try {
+      // var newUser = AuthEntity(
+      //   fname: user.fname,
+      //   lname: user.lname,
+      //   email: user.email,
+      //   phoneNo: user.phoneNo,
+      //   address: user.address,
+      //   username: user.address,
+      //   password: currentUser.,
+      // );
+      final response = await _ownerRemoteDatasource.updateOwner(owner);
+      print("User update response::: $response");
+      return Right(response);
+    } catch (e) {
+      print('ERROR $e');
+      return Left(ApiFailure(message: e.toString()));
+    }
+  }
 }

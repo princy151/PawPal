@@ -26,7 +26,7 @@ class OwnerLoginParams extends Equatable {
 class OwnerLoginUseCase implements UsecaseWithParams<String, OwnerLoginParams> {
   final IOwnerRepository repository;
   final TokenSharedPrefs tokenSharedPrefs;
-
+  
   OwnerLoginUseCase(this.repository, this.tokenSharedPrefs);
 
   @override

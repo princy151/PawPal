@@ -7,10 +7,10 @@ sealed class SitterSignupEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadImage extends SitterSignupEvent {
+class LoadImagee extends SitterSignupEvent {
   final File file;
 
-  const LoadImage({
+  const LoadImagee({
     required this.file,
   });
 }

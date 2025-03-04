@@ -13,7 +13,7 @@ AuthApiModel _$AuthApiModelFromJson(Map<String, dynamic> json) => AuthApiModel(
       email: json['email'] as String,
       phone: json['phone'] as String,
       address: json['address'] as String,
-      password: json['password'] as String,
+      password: json['password'] as String?,
       pets: (json['pets'] as List<dynamic>)
           .map((e) => PetEntity.fromJson(e as Map<String, dynamic>))
           .toList(),

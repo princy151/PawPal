@@ -37,7 +37,7 @@ class PetOwnerEntity extends Equatable {
   final String email;
   final String phone;
   final String address;
-  final String password;
+  final String? password;
   final String? image;
   final List<PetEntity> pets;
 
@@ -47,7 +47,7 @@ class PetOwnerEntity extends Equatable {
     required this.email,
     required this.phone,
     required this.address,
-    required this.password,
+    this.password,
     this.image,
     this.pets = const [],
   });
@@ -55,4 +55,16 @@ class PetOwnerEntity extends Equatable {
   @override
   List<Object?> get props =>
       [ownerId, name, email, phone, address, image, pets];
+
+  static fromJson(Map<String, dynamic> userMap) {
+    return PetOwnerEntity(
+      ownerId: userMap['userId'],
+      name: userMap['name'] ?? '',
+      email: userMap['email'] ?? '',
+      phone: userMap['phone'] ?? '',
+      address: userMap['address'] ?? '',
+      image: userMap['image'],
+      password: '',
+    );
+  }
 }

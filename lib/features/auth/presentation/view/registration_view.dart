@@ -54,10 +54,17 @@ class _RegistrationViewState extends State<RegistrationView>
         setState(() {
           if (isProfile) {
             _profileImg = File(image.path);
-            // Send profile image to server
-            context
-                .read<owner.OwnerSignupBloc>()
-                .add(owner.LoadImage(file: _profileImg!));
+            if (_tabController.index == 0) {
+              // Pet Owner
+              context
+                  .read<owner.OwnerSignupBloc>()
+                  .add(owner.LoadImage(file: _profileImg!));
+            } else {
+              // Pet Sitter
+              context
+                  .read<sitter.SitterSignupBloc>()
+                  .add(sitter.LoadImagee(file: _profileImg!));
+            }
           } else {
             _petImg = File(image.path); // Set pet image
             context

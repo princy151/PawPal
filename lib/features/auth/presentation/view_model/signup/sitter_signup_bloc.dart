@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:pawpal/core/common/my_snackbar.dart';
-import 'package:pawpal/features/auth/domain/entity/pet_sitter_entity.dart';
 import 'package:pawpal/features/auth/domain/use_case/sitter_register_usecase.dart';
 import 'package:pawpal/features/auth/domain/use_case/upload_image_usecase.dart';
 
@@ -22,7 +21,7 @@ class SitterSignupBloc extends Bloc<SitterSignupEvent, SitterSignupState> {
         _uploadImageUsecase = uploadImageUsecase,
         super(SitterSignupState.initial()) {
     on<RegisterSitter>(_onSitterRegisterEvent);
-    on<LoadImage>(_onLoadImagee);
+    on<LoadImagee>(_onLoadImagee);
   }
 
   void _onSitterRegisterEvent(
@@ -38,7 +37,7 @@ class SitterSignupBloc extends Bloc<SitterSignupEvent, SitterSignupState> {
       address: event.address,
       password: event.password,
       image:
-          state.imageName, // Assuming the image name is passed from the state
+          state.imageNamee, // Assuming the image name is passed from the state
     ));
 
     result.fold(
@@ -52,7 +51,7 @@ class SitterSignupBloc extends Bloc<SitterSignupEvent, SitterSignupState> {
   }
 
   void _onLoadImagee(
-    LoadImage event,
+    LoadImagee event,
     Emitter<SitterSignupState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
@@ -64,7 +63,7 @@ class SitterSignupBloc extends Bloc<SitterSignupEvent, SitterSignupState> {
     result.fold(
       (l) => emit(state.copyWith(isLoading: false, isSuccess: false)),
       (r) {
-        emit(state.copyWith(isLoading: false, isSuccess: true, imageName: r));
+        emit(state.copyWith(isLoading: false, isSuccess: true, imageNamee: r));
       },
     );
   }

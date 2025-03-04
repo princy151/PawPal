@@ -10,10 +10,7 @@ class SitterRemoteRepository implements ISitterRepository {
   final SitterRemoteDataSource _sitterRemoteDatasource;
   SitterRemoteRepository(this._sitterRemoteDatasource);
 
-  @override
-  Future<Either<Failure, PetSitterEntity>> getCurrentUser() {
-    throw UnimplementedError();
-  }
+
 
   @override
   Future<Either<Failure, String>> loginSitter(
@@ -60,4 +57,37 @@ class SitterRemoteRepository implements ISitterRepository {
     }
   }
   
+  @override
+  Future<Either<Failure, PetSitterEntity>> getCurrentSitter(
+      String? token, String userID) async {
+    try {
+      final user = await _sitterRemoteDatasource.getCurrentSitter(token, userID);
+      print("USERRR:: $user");
+      return Right(user);
+    } catch (e) {
+      return Left(ApiFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PetSitterEntity>> updateSitter(PetSitterEntity sitter) async {
+    print('User update response:::::::');
+    try {
+      // var newUser = AuthEntity(
+      //   fname: user.fname,
+      //   lname: user.lname,
+      //   email: user.email,
+      //   phoneNo: user.phoneNo,
+      //   address: user.address,
+      //   username: user.address,
+      //   password: currentUser.,
+      // );
+      final response = await _sitterRemoteDatasource.updateSitter(sitter);
+      print("User update response::: $response");
+      return Right(response);
+    } catch (e) {
+      print('ERROR $e');
+      return Left(ApiFailure(message: e.toString()));
+    }
+  }
 }

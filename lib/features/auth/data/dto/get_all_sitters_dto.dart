@@ -5,13 +5,13 @@ part 'get_all_sitters_dto.g.dart';
 
 @JsonSerializable()
 class GetAllSittersDTO {
-  final bool success;
-  final int count;
-  final List<AuthApiModel> data;
+  // final bool success;
+  // final int count;
+  final List<SitterApiModel> data;
 
   GetAllSittersDTO({
-    required this.success,
-    required this.count,
+    // required this.success,
+    // required this.count,
     required this.data,
   });
 

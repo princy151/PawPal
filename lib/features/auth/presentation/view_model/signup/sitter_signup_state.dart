@@ -3,28 +3,28 @@ part of 'sitter_signup_bloc.dart';
 class SitterSignupState extends Equatable {
   final bool isLoading;
   final bool isSuccess;
-  final String? imageName;
+  final String? imageNamee;
 
   const SitterSignupState({
     required this.isLoading,
     required this.isSuccess,
-    this.imageName,
+    this.imageNamee,
   });
 
   const SitterSignupState.initial()
       : isLoading = false,
         isSuccess = false,
-        imageName = null;
+        imageNamee = null;
 
   SitterSignupState copyWith({
     bool? isLoading,
     bool? isSuccess,
-    String? imageName,
+    String? imageNamee,
   }) {
     return SitterSignupState(
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
-      imageName: imageName ?? this.imageName,
+      imageNamee: imageNamee ?? this.imageNamee,
     );
   }
 
@@ -32,6 +32,6 @@ class SitterSignupState extends Equatable {
   List<Object?> get props => [
         isLoading,
         isSuccess,
-        imageName,
+        imageNamee,
       ];
 }

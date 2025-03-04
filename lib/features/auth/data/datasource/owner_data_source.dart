@@ -7,7 +7,10 @@ abstract interface class IOwnerDataSource {
 
   Future<void> registerOwner(PetOwnerEntity owner);
 
-  Future<PetOwnerEntity> getCurrentUser();
+  // Future<PetOwnerEntity> getCurrentUser();
 
   Future<String> uploadProfilePicture(File file);
+  Future<List<PetOwnerEntity>> getOwners();
+  Future<PetOwnerEntity> getCurrentOwner(String? token, String userId);
+  Future<PetOwnerEntity> updateOwner(PetOwnerEntity userId);
 }

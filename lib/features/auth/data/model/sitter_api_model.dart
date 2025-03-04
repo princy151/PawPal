@@ -5,7 +5,7 @@ import 'package:pawpal/features/auth/domain/entity/pet_sitter_entity.dart';
 part 'sitter_api_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class AuthApiModel extends Equatable {
+class SitterApiModel extends Equatable {
   @JsonKey(name: '_id')
   final String? id;
   final String name;
@@ -13,22 +13,22 @@ class AuthApiModel extends Equatable {
   final String phone;
   final String? image;
   final String address;
-  final String password;
+  final String? password;
 
-  const AuthApiModel({
+  const SitterApiModel({
     this.id,
     this.image,
     required this.name,
     required this.email,
     required this.phone,
     required this.address,
-    required this.password,
+    this.password,
   });
 
-  factory AuthApiModel.fromJson(Map<String, dynamic> json) =>
-      _$AuthApiModelFromJson(json);
+  factory SitterApiModel.fromJson(Map<String, dynamic> json) =>
+      _$SitterApiModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$AuthApiModelToJson(this);
+  Map<String, dynamic> toJson() => _$SitterApiModelToJson(this);
 
   // To Entity
   PetSitterEntity toEntity() {
@@ -44,8 +44,8 @@ class AuthApiModel extends Equatable {
   }
 
   // From Entity
-  factory AuthApiModel.fromEntity(PetSitterEntity entity) {
-    return AuthApiModel(
+  factory SitterApiModel.fromEntity(PetSitterEntity entity) {
+    return SitterApiModel(
       id: entity.sitterId,
       image: entity.image,
       name: entity.name,
@@ -56,7 +56,7 @@ class AuthApiModel extends Equatable {
     );
   }
 
-  static List<PetSitterEntity> toEntityList(List<AuthApiModel> models) =>
+  static List<PetSitterEntity> toEntityList(List<SitterApiModel> models) =>
       models.map((model) => model.toEntity()).toList();
 
   @override

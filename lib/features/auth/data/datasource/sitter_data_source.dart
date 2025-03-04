@@ -7,9 +7,14 @@ abstract interface class ISitterDataSource {
 
   Future<void> registerSitter(PetSitterEntity sitter);
 
-  Future<PetSitterEntity> getCurrentUser();
+  // Future<PetSitterEntity> getCurrentUser();
 
   Future<String> uploadProfilePicture(File file);
 
-   Future<List<PetSitterEntity>> getSitters();
+  Future<List<PetSitterEntity>> getSitters();
+
+  Future<PetSitterEntity> getCurrentSitter(String? token, String userId);
+
+
+  Future<PetSitterEntity> updateSitter(PetSitterEntity userId);
 }

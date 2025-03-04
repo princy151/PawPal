@@ -17,11 +17,11 @@ class NavigateRegisterScreenEvent extends LoginEvent {
   });
 }
 
-class NavigateHomeScreenEvent extends LoginEvent {
+class NavigateSitterHomeScreenEvent extends LoginEvent {
   final BuildContext context;
   final Widget destination;
 
-  const NavigateHomeScreenEvent({
+  const NavigateSitterHomeScreenEvent({
     required this.context,
     required this.destination,
   });

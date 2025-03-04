@@ -4,14 +4,15 @@ import 'package:pawpal/core/error/failure.dart';
 import 'package:pawpal/features/auth/domain/entity/pet_sitter_entity.dart';
 import 'package:pawpal/features/auth/domain/repository/sitter_repository.dart';
 
-class GetAllItemUseCase implements UsecaseWithoutParams<List<PetSitterEntity>> {
-  final ISitterRepository itemRepository;
+class GetAllSitterUseCase
+    implements UsecaseWithoutParams<List<PetSitterEntity>> {
+  final ISitterRepository sitterRepository;
 
-  GetAllItemUseCase({required this.itemRepository});
+  GetAllSitterUseCase({required this.sitterRepository});
 
   @override
   Future<Either<Failure, List<PetSitterEntity>>> call() {
-    print('GetAllItemUseCase called');
-    return itemRepository.getSitters();
+    print('GetAllSitterUseCase called');
+    return sitterRepository.getSitters();
   }
 }

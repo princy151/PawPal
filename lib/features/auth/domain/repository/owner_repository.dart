@@ -11,5 +11,9 @@ abstract interface class IOwnerRepository {
 
   Future<Either<Failure, String>> uploadProfilePicture(File file);
 
-  Future<Either<Failure, PetOwnerEntity>> getCurrentUser();
+  Future<Either<Failure, PetOwnerEntity>> getCurrentOwner(
+      String? token, String userID);
+
+  Future<Either<Failure, PetOwnerEntity>> updateOwner(PetOwnerEntity owner);
+  Future<Either<Failure, List<PetOwnerEntity>>> getOwners();
 }
