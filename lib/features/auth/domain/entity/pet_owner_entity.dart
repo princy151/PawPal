@@ -5,6 +5,7 @@ part 'pet_owner_entity.g.dart'; // or wherever the PetEntity file is
 
 @JsonSerializable()
 class PetEntity extends Equatable {
+  final String? petId;
   final String petname;
   final String type;
   final String? petimage;
@@ -13,6 +14,7 @@ class PetEntity extends Equatable {
   final String booked;
 
   const PetEntity({
+    this.petId,
     required this.petname,
     required this.type,
     this.petimage,
@@ -58,7 +60,7 @@ class PetOwnerEntity extends Equatable {
 
   static fromJson(Map<String, dynamic> userMap) {
     return PetOwnerEntity(
-      ownerId: userMap['userId'],
+      ownerId: userMap['_id'],
       name: userMap['name'] ?? '',
       email: userMap['email'] ?? '',
       phone: userMap['phone'] ?? '',

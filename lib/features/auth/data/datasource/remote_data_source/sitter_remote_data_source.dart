@@ -91,7 +91,7 @@ class SitterRemoteDataSource implements ISitterDataSource {
       print('RESULTTT $response');
       if (response.statusCode == 200) {
         print('RESULTTTTTT');
-        userIdSharedPrefs.setOwner(response.data['sitter']);
+        userIdSharedPrefs.setSitter(response.data['sitter']);
         return response.data['token'];
       } else {
         throw Exception(response.statusMessage);
@@ -176,11 +176,11 @@ class SitterRemoteDataSource implements ISitterDataSource {
       print("abc::: $currentSitter");
 
       currentSitter?.remove('__v');
-      var url = ApiEndpoints.updateOwner + id;
+      var url = ApiEndpoints.updateSitter + id;
       print("URL::: $url");
       // Send the update request to the backend API
       Response response = await _dio.put(
-        ApiEndpoints.updateOwner + id,
+        ApiEndpoints.updateSitter + id,
         data: currentSitter,
         options: Options(
           headers: {

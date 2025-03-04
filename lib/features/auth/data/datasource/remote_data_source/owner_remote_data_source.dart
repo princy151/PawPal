@@ -100,6 +100,10 @@ class OwnerRemoteDataSource implements IOwnerDataSource {
       print('Response:: ${response.data}');
       if (response.statusCode == 200) {
         userIdSharedPrefs.setOwner(response.data['userId']);
+        // final ownerId = response.data['ownerId'];
+
+        // final prefs = await SharedPreferences.getInstance();
+        // await prefs.setString('ownerId', ownerId);
         return response.data['token'];
       } else {
         throw Exception(response.statusMessage);
