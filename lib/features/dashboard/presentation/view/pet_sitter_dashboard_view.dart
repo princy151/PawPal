@@ -1,185 +1,188 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pawpal/app/di/di.dart';
+import 'package:pawpal/app/shared_prefs/token_shared_prefs.dart';
+import 'package:pawpal/features/auth/domain/entity/pet_owner_entity.dart';
+import 'package:pawpal/features/dashboard/presentation/view/pet_details_view.dart';
+import 'package:pawpal/features/dashboard/presentation/view_model/sitter_dashboard_bloc.dart';
 
-class PetSitterDashboardView extends StatefulWidget {
+class PetSitterDashboardView extends StatelessWidget {
   const PetSitterDashboardView({super.key});
-
-  @override
-  State<PetSitterDashboardView> createState() => _PetSitterDashboardViewState();
-}
-
-class _PetSitterDashboardViewState extends State<PetSitterDashboardView> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    const HomeView(),
-    const ScheduleView(),
-    const ProfileView(),
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pet Sitter Dashboard'),
-        backgroundColor: const Color(0xFF6C4F3D), // Brownish pet theme color
-        actions: [
-          // Logout Button in AppBar
-          IconButton(
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/login');
-            },
-            icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
-          ),
-        ],
+        title: const Text(
+          'Pets Available for Sitter',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: const Color(0xFF6A4E1D),
       ),
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        selectedItemColor: const Color(0xFF6C4F3D),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Schedule',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
-  }
-}
+      body: SingleChildScrollView(
+        child: BlocBuilder<SitterDashboardBloc, SitterDashboardState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xFF6A4E1D),
+                ),
+              );
+            }
 
-// Home View Section
-class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+            if (state.error != null) {
+              return Center(
+                child: Text(
+                  'Error: ${state.error}',
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
+              );
+            }
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Welcome, Pet Sitter!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF6C4F3D),
+            if (state.owners.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No pets available.',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+              );
+            }
+
+            // Extract pets from all owners
+            List<PetEntity> pets =
+                state.owners.expand((owner) => owner.pets).toList();
+
+            if (pets.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No pets available.',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+              );
+            }
+
+            return GridView.builder(
+              shrinkWrap:
+                  true, // Ensures GridView takes up only the necessary space
+              physics:
+                  NeverScrollableScrollPhysics(), // Prevents GridView from scrolling independently
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Number of columns in grid
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.75, // Aspect ratio of each card
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Quick Actions',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildQuickActionCard(
-                    'My Schedule', Icons.calendar_today, Colors.blue),
-                _buildQuickActionCard('Messages', Icons.message, Colors.green),
-                _buildQuickActionCard(
-                    'Completed Tasks', Icons.check_circle, Colors.orange),
-              ],
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Upcoming Appointments',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            _buildAppointmentCard(
-                'Buddy the Golden Retriever', '12 Aug, 10:00 AM'),
-            _buildAppointmentCard('Mittens the Cat', '12 Aug, 3:00 PM'),
-          ],
+              itemCount: pets.length,
+              itemBuilder: (context, index) {
+                PetEntity pet = pets[index];
+                return Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 120, // Fixed height for image
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF6A4E1D),
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(12)),
+                          image: DecorationImage(
+                            image: _getImageProvider(pet.petimage),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                pet.petname,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4.0),
+                                child: Text(
+                                  pet.type,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF6A4E1D),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            minimumSize: Size(double.infinity,
+                                45), // Ensures the button is not too small
+                          ),
+                          onPressed: () {
+                            // Navigate to PetDetailView, passing the selected pet directly
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider(
+                                  create: (context) =>
+                                      getIt<SitterDashboardBloc>(),
+                                  child: PetDetailView(
+                                    product: pet,
+                                    tokenSharedPrefs: getIt<TokenSharedPrefs>(),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text('View Details'),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildQuickActionCard(String title, IconData icon, Color color) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 3,
-      child: Container(
-        width: 100,
-        height: 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: color.withOpacity(0.2),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAppointmentCard(String petName, String dateTime) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 2,
-      child: ListTile(
-        leading: const Icon(Icons.pets, size: 36, color: Colors.blue),
-        title:
-            Text(petName, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(dateTime),
-      ),
-    );
-  }
-}
-
-// Schedule View Section
-class ScheduleView extends StatelessWidget {
-  const ScheduleView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Schedule View',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-}
-
-// Profile View Section
-class ProfileView extends StatelessWidget {
-  const ProfileView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Profile View',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
-    );
+  /// Get the image provider based on the image type (Base64, URL, or asset).
+  ImageProvider _getImageProvider(String? image) {
+    if (image == null) {
+      // Return a placeholder image if no image is available.
+      return const AssetImage('assets/images/pet_placeholder.png');
+    } else if (image.startsWith('data:image')) {
+      // If image is Base64 encoded, decode it and show as MemoryImage
+      return MemoryImage(base64Decode(image.split(',').last));
+    } else if (Uri.tryParse(image)?.isAbsolute ?? false) {
+      // If the image is a URL, use NetworkImage
+      return NetworkImage(image);
+    } else if (File(image).existsSync()) {
+      // If the image is a file path, use FileImage
+      return FileImage(File(image));
+    } else {
+      // If image is a local asset path, use AssetImage
+      return AssetImage(image);
+    }
   }
 }

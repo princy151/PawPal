@@ -7,6 +7,7 @@ part of 'pet_owner_entity.dart';
 // **************************************************************************
 
 PetEntity _$PetEntityFromJson(Map<String, dynamic> json) => PetEntity(
+      petId: json['_id'] as String?,
       petname: json['petname'] as String,
       type: json['type'] as String,
       petimage: json['petimage'] as String?,
@@ -16,6 +17,7 @@ PetEntity _$PetEntityFromJson(Map<String, dynamic> json) => PetEntity(
     );
 
 Map<String, dynamic> _$PetEntityToJson(PetEntity instance) => <String, dynamic>{
+      '_id': instance.petId,
       'petname': instance.petname,
       'type': instance.type,
       'petimage': instance.petimage,

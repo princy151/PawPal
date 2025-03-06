@@ -36,13 +36,17 @@ class OwnerBookingView extends StatelessWidget {
             itemBuilder: (context, index) {
               final BookingEntity booking = state.bookings[index];
 
+              // Extract the sitter's name from the sitterId object
+              final sitterName = booking.sitterId;
+              // ['name'] ?? 'Unknown Sitter';
+
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: ListTile(
                   title: Text('Booking ID: ${booking.bookingId}'),
                   subtitle: Text(
                     'Pet ID: ${booking.petId}\n'
-                    'Sitter ID: ${booking.sitterId}\n'
+                    // 'Sitter Name: $sitterName\n' // Display the sitter's name
                     'Start Date: ${booking.startDate}\n'
                     'End Date: ${booking.endDate}\n'
                     'Status: ${booking.status}',

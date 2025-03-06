@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:pawpal/features/splash/presentation/view/onboarding_view.dart';
 import 'package:pawpal/features/splash/presentation/view_model/onboarding_cubit.dart';
 

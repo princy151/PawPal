@@ -1,86 +1,86 @@
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pawpal/app/constants/hive_table_constant.dart';
-import 'package:pawpal/features/auth/data/model/owner_hive_model.dart';
+// import 'dart:io';
 
+// import 'package:hive_flutter/hive_flutter.dart';
+// import 'package:path_provider/path_provider.dart';
+// import 'package:pawpal/app/constants/hive_table_constant.dart';
+// import 'package:pawpal/features/auth/data/model/owner_hive_model.dart';
 
-class HiveService {
-  static Future<void> init() async {
-    // Initialize the database
-    var directory = await getApplicationDocumentsDirectory();
-    var path = '${directory.path}pawpal.db';
+// class HiveService {
+//   static Future<void> init() async {
+//     // Initialize the database
+//     var directory = await getApplicationDocumentsDirectory();
+//     var path = '${directory.path}/pawpal.db';
 
-    Hive.init(path);
+//     Hive.init(path);
 
-    // Register Adapters
-    Hive.registerAdapter(OwnerHiveModelAdapter());
-  }
+//     // Register Adapters
+//     Hive.registerAdapter(OwnerHiveModelAdapter());
+//   }
 
+//   // Auth Queries
+//   Future<void> register(OwnerHiveModel auth) async {
+//     var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
+//     await box.put(auth.ownerId, auth);
+//   }
 
-/*
-  register box
-  {
-    fname : "asd",
-    lname : "asd",
-    batch : {batchId : 1, batchName : "Batch 1"},
-    courses : [{courseId : 1, courseName : "Course 1"}, {courseId : 2, courseName : "Course 2"}],
-  }
-*/
+//   Future<void> deleteAuth(String id) async {
+//     var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
+//     await box.delete(id);
+//   }
 
-// OR
+//   Future<List<OwnerHiveModel>> getAllAuth() async {
+//     var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
+//     return box.values.toList();
+//   }
 
-/*
- {
-    fname : "asd",
-    lname : "asd",
-    batch : 1,
-    courses : [1,3,4],
-  }
-*/
+//   // Login using username and password
+//   Future<OwnerHiveModel?> login(String username, String password) async {
+//     var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
+//     try {
+//       // Fetch the user based on username and password
+//       var user = box.values.firstWhere((element) =>
+//           element.name == username && element.password == password);
+//       box.close();
+//       return user;
+//     } catch (e) {
+//       box.close();
+//       return null; // No matching user found
+//     }
+//   }
 
-  // Auth Queries
-  Future<void> register(OwnerHiveModel auth) async {
-    var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
-    await box.put(auth.ownerId, auth);
-  }
+//   Future<void> clearAll() async {
+//     await Hive.deleteBoxFromDisk(HiveTableConstant.ownerBox);
+//     await Hive.deleteBoxFromDisk(HiveTableConstant.sitterBox);
+//   }
 
-  Future<void> deleteAuth(String id) async {
-    var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
-    await box.delete(id);
-  }
+//   // Clear Owner Box
+//   Future<void> clearOwnerBox() async {
+//     await Hive.deleteBoxFromDisk(HiveTableConstant.ownerBox);
+//   }
 
-  Future<List<OwnerHiveModel>> getAllAuth() async {
-    var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
-    return box.values.toList();
-  }
+//   Future<void> close() async {
+//     await Hive.close();
+//   }
 
-  // Login using username and password
-  Future<OwnerHiveModel?> login(String username, String password) async {
-    // var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.studentBox);
-    // var auth = box.values.firstWhere(
-    //     (element) =>
-    //         element.username == username && element.password == password,
-    //     orElse: () => AuthHiveModel.initial());
-    // return auth;
+//   // Fetch the currently logged-in owner (if any)
+//   Future<OwnerHiveModel?> getCurrentUser() async {
+//     var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
+//     var auth = box.values.isNotEmpty ? box.values.first : null;
+//     box.close();
+//     return auth;
+//   }
 
-    var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
-    var student = box.values.firstWhere((element) =>
-        element.name == username && element.password == password);
-    box.close();
-    return student;
-  }
+//   // Update Owner Profile (e.g., changing image or address)
+//   Future<void> updateOwnerProfile(OwnerHiveModel owner) async {
+//     var box = await Hive.openBox<OwnerHiveModel>(HiveTableConstant.ownerBox);
+//     await box.put(owner.ownerId, owner);
+//   }
 
-  Future<void> clearAll() async {
-    await Hive.deleteBoxFromDisk(HiveTableConstant.ownerBox);
-    await Hive.deleteBoxFromDisk(HiveTableConstant.sitterBox);
-  }
-
-  // Clear Student Box
-  Future<void> clearStudentBox() async {
-    await Hive.deleteBoxFromDisk(HiveTableConstant.ownerBox);
-  }
-
-  Future<void> close() async {
-    await Hive.close();
-  }
-}
+//   // Upload profile image (if any image URL is provided)
+//   Future<String> uploadImage(File file) async {
+//     // Simulate the process of uploading the image and returning a URL
+//     // In a real scenario, this would involve an API call to upload the file and get the URL
+//     // Return a mock URL for now
+//     return Future.value("https://example.com/uploads/${file.path}");
+//   }
+// }

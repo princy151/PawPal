@@ -5,6 +5,7 @@ part 'pet_owner_entity.g.dart'; // or wherever the PetEntity file is
 
 @JsonSerializable()
 class PetEntity extends Equatable {
+  @JsonKey(name: '_id')
   final String? petId;
   final String petname;
   final String type;
@@ -30,7 +31,7 @@ class PetEntity extends Equatable {
 
   @override
   List<Object?> get props =>
-      [petname, type, petimage, petinfo, openbooking, booked];
+      [petId, petname, type, petimage, petinfo, openbooking, booked];
 }
 
 class PetOwnerEntity extends Equatable {

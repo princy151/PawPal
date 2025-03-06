@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pawpal/app/di/di.dart';
 import 'package:pawpal/features/auth/presentation/view/login_view.dart';
-import 'package:pawpal/features/auth/presentation/view_model/owner_login/owner_login_bloc.dart';
-import 'package:pawpal/features/home/presentation/view_model/pet_owner_dashboard_state.dart';
+import 'package:pawpal/features/auth/presentation/view_model/login/owner_login_bloc.dart';
+import 'package:pawpal/features/auth/presentation/view_model/login/sitter_login_bloc.dart';
+import 'package:pawpal/features/home/presentation/view_model/pet_owner_home_state.dart';
 
-class OnboardingCubit extends Cubit<PetOwnerDashboardState> {
-  OnboardingCubit() : super(PetOwnerDashboardState.initial());
-
-  void onTabTapped(int index) {
-    emit(state.copyWith(selectedIndex: index));
-  }
+class OnboardingCubit extends Cubit<OwnerHomeState> {
+  OnboardingCubit() : super(OwnerHomeState.initial());
 
   void goToLogin(BuildContext context) {
     Future.delayed(const Duration(seconds: 0), () async {
@@ -18,8 +15,11 @@ class OnboardingCubit extends Cubit<PetOwnerDashboardState> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => BlocProvider.value(
-              value: getIt<OwnerLoginBloc>(),
+            builder: (context) => MultiBlocProvider(
+              providers: [
+                BlocProvider.value(value: getIt<OwnerLoginBloc>()),
+                BlocProvider.value(value: getIt<SitterLoginBloc>()),
+              ],
               child: const LoginView(),
             ),
           ),

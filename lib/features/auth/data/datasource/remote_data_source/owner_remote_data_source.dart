@@ -151,7 +151,7 @@ class OwnerRemoteDataSource implements IOwnerDataSource {
       );
 
       GetAllOwnersDTO ownerDTO = GetAllOwnersDTO.fromJson(response.data);
-      print('OWNERS RETRIEVED');
+      print('OWNERS RETRIEVED $ownerDTO');
       return AuthApiModel.toEntityList(ownerDTO.data);
     } on DioException catch (e) {
       throw Exception((e));
