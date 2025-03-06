@@ -2,227 +2,199 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pawpal/features/auth/domain/entity/pet_owner_entity.dart';
 
 void main() {
-  group('PetOwnerEntity Tests', () {
-    test('Should create an instance of PetOwnerEntity', () {
-      const petOwner = PetOwnerEntity(
-        ownerId: '123',
-        name: 'Princy Agrawal',
-        email: 'princy@example.com',
-        password: 'securepassword',
-        petname: 'Buddy',
-        type: 'Dog',
-        address: '123 Pet Street',
-        image: 'image_url',
-      );
+  test('1. PetEntity should be instantiated correctly', () {
+    final pet = PetEntity(
+      petId: '123',
+      petname: 'Fluffy',
+      type: 'Dog',
+      petimage: 'image_url',
+      petinfo: 'Fluffy is a friendly dog',
+      openbooking: 'yes',
+      booked: 'no',
+    );
 
-      expect(petOwner, isA<PetOwnerEntity>());
-    });
+    expect(pet.petId, '123');
+    expect(pet.petname, 'Fluffy');
+    expect(pet.type, 'Dog');
+    expect(pet.petimage, 'image_url');
+    expect(pet.petinfo, 'Fluffy is a friendly dog');
+    expect(pet.openbooking, 'yes');
+    expect(pet.booked, 'no');
+  });
 
-    test('Should support value equality', () {
-      const petOwner1 = PetOwnerEntity(
-        ownerId: '123',
-        name: 'Princy Agrawal',
-        email: 'priincy@example.com',
-        password: 'securepassword',
-        petname: 'Buddy',
-        type: 'Dog',
-        address: '123 Pet Street',
-        image: 'image_url',
-      );
+  test('2. PetEntity should correctly convert from JSON', () {
+    final petJson = {
+      '_id': '123',
+      'petname': 'Fluffy',
+      'type': 'Dog',
+      'petimage': 'image_url',
+      'petinfo': 'Friendly dog',
+      'openbooking': 'yes',
+      'booked': 'no'
+    };
 
-      const petOwner2 = PetOwnerEntity(
-        ownerId: '123',
-        name: 'Princy Agrawal',
-        email: 'priincy@example.com',
-        password: 'securepassword',
-        petname: 'Buddy',
-        type: 'Dog',
-        address: '123 Pet Street',
-        image: 'image_url',
-      );
+    final pet = PetEntity.fromJson(petJson);
 
-      expect(petOwner1, equals(petOwner2));
-    });
+    expect(pet.petId, '123');
+    expect(pet.petname, 'Fluffy');
+    expect(pet.type, 'Dog');
+    expect(pet.petimage, 'image_url');
+    expect(pet.petinfo, 'Friendly dog');
+    expect(pet.openbooking, 'yes');
+    expect(pet.booked, 'no');
+  });
 
-    test('Should detect inequality between different instances', () {
-      const petOwner1 = PetOwnerEntity(
-        ownerId: '123',
-        name: 'Alice',
-        email: 'alice@example.com',
-        password: 'pass123',
-        petname: 'Max',
-        type: 'Cat',
-        address: '456 Pet Avenue',
-      );
+  test('3. PetEntity should correctly convert to JSON', () {
+    final pet = PetEntity(
+      petId: '123',
+      petname: 'Fluffy',
+      type: 'Dog',
+      petimage: 'image_url',
+      petinfo: 'Friendly dog',
+      openbooking: 'yes',
+      booked: 'no',
+    );
 
-      const petOwner2 = PetOwnerEntity(
-        ownerId: '456',
-        name: 'Bob',
-        email: 'bob@example.com',
-        password: 'pass456',
-        petname: 'Charlie',
-        type: 'Dog',
-        address: '789 Pet Lane',
-      );
+    final petJson = pet.toJson();
 
-      expect(petOwner1, isNot(equals(petOwner2)));
-    });
+    expect(petJson['_id'], '123');
+    expect(petJson['petname'], 'Fluffy');
+    expect(petJson['type'], 'Dog');
+    expect(petJson['petimage'], 'image_url');
+    expect(petJson['petinfo'], 'Friendly dog');
+    expect(petJson['openbooking'], 'yes');
+    expect(petJson['booked'], 'no');
+  });
 
-    test('Should allow null ownerId', () {
-      const petOwner = PetOwnerEntity(
-        name: 'Emma',
-        email: 'emma@example.com',
-        password: 'securepass',
-        petname: 'Rocky',
-        type: 'Bird',
-        address: '321 Pet Road',
-      );
+  test('4. Two PetEntity objects with the same data should be equal', () {
+    final pet1 = PetEntity(
+      petId: '123',
+      petname: 'Fluffy',
+      type: 'Dog',
+      petimage: 'image_url',
+      petinfo: 'Friendly dog',
+      openbooking: 'yes',
+      booked: 'no',
+    );
 
-      expect(petOwner.ownerId, isNull);
-    });
+    final pet2 = PetEntity(
+      petId: '123',
+      petname: 'Fluffy',
+      type: 'Dog',
+      petimage: 'image_url',
+      petinfo: 'Friendly dog',
+      openbooking: 'yes',
+      booked: 'no',
+    );
 
-    test('Should return correct properties in props list', () {
-      const petOwner = PetOwnerEntity(
-        ownerId: '001',
-        name: 'Charlie Brown',
-        email: 'charlie@example.com',
-        password: 'pass321',
-        petname: 'Snoopy',
-        type: 'Dog',
-        address: 'Peanuts Street',
-      );
+    expect(pet1, equals(pet2));
+  });
 
-      expect(petOwner.props, [
-        '001',
-        'Charlie Brown',
-        'charlie@example.com',
-        'pass321',
-        'Snoopy',
-        'Dog',
-        'Peanuts Street',
-        null,
-      ]);
-    });
+  test('6. PetOwnerEntity should be instantiated correctly', () {
+    final owner = PetOwnerEntity(
+      ownerId: 'owner123',
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      phone: '1234567890',
+      address: '123 Main St',
+      image: 'owner_image_url',
+      pets: [],
+    );
 
-    test('Should compare instances correctly when image field is different',
-        () {
-      const petOwner1 = PetOwnerEntity(
-        ownerId: '101',
-        name: 'Mike',
-        email: 'mike@example.com',
-        password: 'pass999',
-        petname: 'Rex',
-        type: 'Dog',
-        address: 'Hilltop Road',
-        image: 'image1_url',
-      );
+    expect(owner.ownerId, 'owner123');
+    expect(owner.name, 'John Doe');
+    expect(owner.email, 'johndoe@example.com');
+    expect(owner.phone, '1234567890');
+    expect(owner.address, '123 Main St');
+    expect(owner.image, 'owner_image_url');
+    expect(owner.pets, isEmpty);
+  });
 
-      const petOwner2 = PetOwnerEntity(
-        ownerId: '101',
-        name: 'Mike',
-        email: 'mike@example.com',
-        password: 'pass999',
-        petname: 'Rex',
-        type: 'Dog',
-        address: 'Hilltop Road',
-        image: 'image2_url',
-      );
+  test('7. PetOwnerEntity should correctly convert from JSON', () {
+    final ownerJson = {
+      '_id': 'owner123',
+      'name': 'John Doe',
+      'email': 'johndoe@example.com',
+      'phone': '1234567890',
+      'address': '123 Main St',
+      'image': 'owner_image_url',
+      'pets': [],
+    };
 
-      expect(petOwner1, isNot(equals(petOwner2)));
-    });
+    final owner = PetOwnerEntity.fromJson(ownerJson);
 
-    test('Should correctly compare instances with only required fields', () {
-      const petOwner1 = PetOwnerEntity(
-        name: 'Sarah',
-        email: 'sarah@example.com',
-        password: 'password123',
-        petname: 'Fluffy',
-        type: 'Rabbit',
-        address: '123 Rabbit Hole',
-      );
+    expect(owner.ownerId, 'owner123');
+    expect(owner.name, 'John Doe');
+    expect(owner.email, 'johndoe@example.com');
+    expect(owner.phone, '1234567890');
+    expect(owner.address, '123 Main St');
+    expect(owner.image, 'owner_image_url');
+    expect(owner.pets, isEmpty);
+  });
 
-      const petOwner2 = PetOwnerEntity(
-        name: 'Sarah',
-        email: 'sarah@example.com',
-        password: 'password123',
-        petname: 'Fluffy',
-        type: 'Rabbit',
-        address: '123 Rabbit Hole',
-      );
+  test('8. PetOwnerEntity should correctly handle an empty pets list', () {
+    final owner = PetOwnerEntity(
+      ownerId: 'owner123',
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      phone: '1234567890',
+      address: '123 Main St',
+      image: 'owner_image_url',
+      pets: [],
+    );
 
-      expect(petOwner1, equals(petOwner2));
-    });
+    expect(owner.pets, isEmpty);
+  });
 
-    test('Should differentiate instances with different names', () {
-      const petOwner1 = PetOwnerEntity(
-        ownerId: '111',
-        name: 'Alex',
-        email: 'alex@example.com',
-        password: 'alexpass',
-        petname: 'Tommy',
-        type: 'Dog',
-        address: 'Park Avenue',
-      );
+  test('9. PetOwnerEntity should allow having multiple pets', () {
+    final pet1 = PetEntity(
+      petId: '123',
+      petname: 'Fluffy',
+      type: 'Dog',
+    );
 
-      const petOwner2 = PetOwnerEntity(
-        ownerId: '111',
-        name: 'Jordan',
-        email: 'alex@example.com',
-        password: 'alexpass',
-        petname: 'Tommy',
-        type: 'Dog',
-        address: 'Park Avenue',
-      );
+    final pet2 = PetEntity(
+      petId: '124',
+      petname: 'Whiskers',
+      type: 'Cat',
+    );
 
-      expect(petOwner1, isNot(equals(petOwner2)));
-    });
+    final owner = PetOwnerEntity(
+      ownerId: 'owner123',
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      phone: '1234567890',
+      address: '123 Main St',
+      image: 'owner_image_url',
+      pets: [pet1, pet2],
+    );
 
-    test('Should compare instances when passwords are different', () {
-      const petOwner1 = PetOwnerEntity(
-        ownerId: '222',
-        name: 'Michael',
-        email: 'michael@example.com',
-        password: 'password1',
-        petname: 'Snowball',
-        type: 'Cat',
-        address: 'Feline Street',
-      );
+    expect(owner.pets.length, 2);
+    expect(owner.pets[0].petname, 'Fluffy');
+    expect(owner.pets[1].petname, 'Whiskers');
+  });
 
-      const petOwner2 = PetOwnerEntity(
-        ownerId: '222',
-        name: 'Michael',
-        email: 'michael@example.com',
-        password: 'password2',
-        petname: 'Snowball',
-        type: 'Cat',
-        address: 'Feline Street',
-      );
+  test('10. Two PetOwnerEntity objects with the same data should be equal', () {
+    final owner1 = PetOwnerEntity(
+      ownerId: 'owner123',
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      phone: '1234567890',
+      address: '123 Main St',
+      image: 'owner_image_url',
+      pets: [],
+    );
 
-      expect(petOwner1, isNot(equals(petOwner2)));
-    });
+    final owner2 = PetOwnerEntity(
+      ownerId: 'owner123',
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      phone: '1234567890',
+      address: '123 Main St',
+      image: 'owner_image_url',
+      pets: [],
+    );
 
-    test('Should compare instances when pet type is different', () {
-      const petOwner1 = PetOwnerEntity(
-        ownerId: '333',
-        name: 'Emma',
-        email: 'emma@example.com',
-        password: 'emmasecret',
-        petname: 'Luna',
-        type: 'Dog',
-        address: 'Canine Street',
-      );
-
-      const petOwner2 = PetOwnerEntity(
-        ownerId: '333',
-        name: 'Emma',
-        email: 'emma@example.com',
-        password: 'emmasecret',
-        petname: 'Luna',
-        type: 'Cat',
-        address: 'Canine Street',
-      );
-
-      expect(petOwner1, isNot(equals(petOwner2)));
-    });
+    expect(owner1, equals(owner2));
   });
 }
