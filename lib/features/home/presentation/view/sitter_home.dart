@@ -1,13 +1,48 @@
+import 'dart:math'; // To use sqrt for magnitude calculation
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pawpal/core/common/my_snackbar.dart';
 import 'package:pawpal/features/home/presentation/view_model/pet_sitter_home_cubit.dart';
 import 'package:pawpal/features/home/presentation/view_model/pet_sitter_home_state.dart';
+import 'package:sensors_plus/sensors_plus.dart'; // Import for accelerometer
 
-class SitterHomeView extends StatelessWidget {
+class SitterHomeView extends StatefulWidget {
   const SitterHomeView({super.key});
 
+  @override
+  _SitterHomeViewState createState() => _SitterHomeViewState();
+}
+
+class _SitterHomeViewState extends State<SitterHomeView> {
   final bool _isDarkTheme = false;
+  final double _shakeThreshold = 15.0; // Shake detection threshold
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen for user accelerometer changes
+    userAccelerometerEvents.listen((UserAccelerometerEvent event) {
+      // Calculate the magnitude of the acceleration
+      double magnitude =
+          sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2));
+
+      // Check if the magnitude exceeds the shake threshold
+      if (magnitude > _shakeThreshold) {
+        _onShake();
+      }
+    });
+  }
+
+  void _onShake() {
+    // Handle logout on shake
+    showMySnackBar(
+      context: context,
+      message: 'Logging out...',
+      color: Colors.red,
+    );
+    context.read<SitterHomeCubit>().logout(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +63,6 @@ class SitterHomeView extends StatelessWidget {
               );
               context.read<SitterHomeCubit>().logout(context);
             },
-          ),
-          Switch(
-            value: _isDarkTheme,
-            onChanged: (value) {
-              // Handle theme change
-            },
-            activeColor: Colors.white, // White switch color
           ),
         ],
       ),

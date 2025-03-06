@@ -1,25 +1,61 @@
+import 'dart:math'; // To use sqrt for magnitude calculation
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pawpal/core/common/my_snackbar.dart';
 import 'package:pawpal/features/home/presentation/view_model/pet_owner_home_cubit.dart';
 import 'package:pawpal/features/home/presentation/view_model/pet_owner_home_state.dart';
+import 'package:sensors_plus/sensors_plus.dart'; // Import the sensors_plus package
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
+  @override
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   final bool _isDarkTheme = false;
+  final double _shakeThreshold = 15.0; // Shake threshold
+  final List<double> _accelerometerValues = []; // To hold accelerometer values
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen for user accelerometer changes
+    userAccelerometerEvents.listen((UserAccelerometerEvent event) {
+      // Calculate the magnitude of the acceleration
+      double magnitude =
+          sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2));
+
+      // If the magnitude exceeds the threshold, trigger logout
+      if (magnitude > _shakeThreshold) {
+        _onShake();
+      }
+    });
+  }
+
+  void _onShake() {
+    // Handle the shake event to trigger logout
+    showMySnackBar(
+      context: context,
+      message: 'Logging out...',
+      color: Colors.red,
+    );
+    context.read<OwnerHomeCubit>().logout(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Welcome Pet Owner',
-            style: TextStyle(color: Colors.white)), // White text
+            style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: Colors.black, // Black app bar
+        backgroundColor: Colors.black,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white), // White icon
+            icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
               showMySnackBar(
                 context: context,
@@ -29,19 +65,11 @@ class HomeView extends StatelessWidget {
               context.read<OwnerHomeCubit>().logout(context);
             },
           ),
-          Switch(
-            value: _isDarkTheme,
-            onChanged: (value) {
-              // Handle theme change
-            },
-            activeColor: Colors.white, // White switch color
-          ),
         ],
       ),
       body: BlocBuilder<OwnerHomeCubit, OwnerHomeState>(
         builder: (context, state) {
-          return state.views
-              .elementAt(state.selectedIndex); // Keep the inside as is
+          return state.views.elementAt(state.selectedIndex);
         },
       ),
       bottomNavigationBar: BlocBuilder<OwnerHomeCubit, OwnerHomeState>(
@@ -65,10 +93,10 @@ class HomeView extends StatelessWidget {
                 label: 'Account',
               ),
             ],
-            backgroundColor: Colors.black, // Black navigation bar
+            backgroundColor: Colors.black,
             currentIndex: state.selectedIndex,
-            selectedItemColor: Colors.black, // White for selected item
-            unselectedItemColor: Colors.grey, // Grey for unselected items
+            selectedItemColor: Colors.black,
+            unselectedItemColor: Colors.grey,
             onTap: (index) {
               context.read<OwnerHomeCubit>().onTabTapped(index);
             },

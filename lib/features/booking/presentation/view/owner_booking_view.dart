@@ -10,7 +10,9 @@ class OwnerBookingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Bookings'),
+        title: const Text('My Bookings',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        backgroundColor: const Color(0xFFB55C50),
       ),
       body: BlocBuilder<BookingsBloc, BookingState>(
         builder: (context, state) {

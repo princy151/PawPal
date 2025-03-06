@@ -18,9 +18,10 @@ class PetSitterDashboardView extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Pets Available for Sitter',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF6A4E1D),
+        backgroundColor:
+            const Color(0xFFA7522A), // Updated color from PetOwnerDashboard
       ),
       body: SingleChildScrollView(
         child: BlocBuilder<SitterDashboardBloc, SitterDashboardState>(
@@ -28,7 +29,8 @@ class PetSitterDashboardView extends StatelessWidget {
             if (state.isLoading) {
               return const Center(
                 child: CircularProgressIndicator(
-                  color: Color(0xFF6A4E1D),
+                  color:
+                      Color(0xFFA7522A), // Updated color from PetOwnerDashboard
                 ),
               );
             }
@@ -86,19 +88,25 @@ class PetSitterDashboardView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        height: 120, // Fixed height for image
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF6A4E1D),
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(12)),
-                          image: DecorationImage(
-                            image: _getImageProvider(pet.petimage),
-                            fit: BoxFit.cover,
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          width:
+                              double.infinity, // Ensure it takes up full width
+                          decoration: BoxDecoration(
+                            color: const Color(
+                                0xFFA7522A), // Updated color from PetOwnerDashboard
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(12)),
+                            image: DecorationImage(
+                              image: _getImageProvider(pet.petimage),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
                       Expanded(
+                        flex: 2,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
@@ -128,31 +136,41 @@ class PetSitterDashboardView extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6A4E1D),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                        child: SizedBox(
+                          width: double
+                              .infinity, // Ensures the button takes the full width
+                          height: 45, // Fixed height for button
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(
+                                  0xFFA7522A), // Updated color from PetOwnerDashboard
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
-                            minimumSize: Size(double.infinity,
-                                45), // Ensures the button is not too small
-                          ),
-                          onPressed: () {
-                            // Navigate to PetDetailView, passing the selected pet directly
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider(
-                                  create: (context) =>
-                                      getIt<SitterDashboardBloc>(),
-                                  child: PetDetailView(
-                                    product: pet,
-                                    tokenSharedPrefs: getIt<TokenSharedPrefs>(),
+                            onPressed: () {
+                              // Navigate to PetDetailView, passing the selected pet directly
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => BlocProvider(
+                                    create: (context) =>
+                                        getIt<SitterDashboardBloc>(),
+                                    child: PetDetailView(
+                                      product: pet,
+                                      tokenSharedPrefs:
+                                          getIt<TokenSharedPrefs>(),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: const Text('View Details'),
+                              );
+                            },
+                            child: const Text(
+                              'View Details',
+                              style: TextStyle(
+                                  color: Colors
+                                      .white), // Button text color to white
+                            ),
+                          ),
                         ),
                       ),
                     ],

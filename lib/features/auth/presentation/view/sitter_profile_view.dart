@@ -43,10 +43,10 @@ class _SitterProfilePageState extends State<SitterProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Profile', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFFB55C50),
         elevation: 0,
       ),
       body: BlocBuilder<SitterProfileBloc, SitterProfileState>(
@@ -56,7 +56,7 @@ class _SitterProfilePageState extends State<SitterProfilePage> {
           } else if (state.sitter == null) {
             return const Center(
                 child: Text("No sitter available",
-                    style: TextStyle(color: Colors.white)));
+                    style: TextStyle(color: Colors.black)));
           } else {
             final sitter = state.sitter!;
             _nameController.text = sitter.name;
@@ -82,7 +82,7 @@ class _SitterProfilePageState extends State<SitterProfilePage> {
                       InkWell(
                         onTap: () {
                           showModalBottomSheet(
-                            backgroundColor: Colors.black,
+                            backgroundColor: Colors.grey,
                             context: context,
                             isScrollControlled: true,
                             shape: const RoundedRectangleBorder(
@@ -106,8 +106,8 @@ class _SitterProfilePageState extends State<SitterProfilePage> {
                                     label: const Text('Camera',
                                         style: TextStyle(color: Colors.white)),
                                     style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.black,
-                                      backgroundColor: Colors.white,
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: const Color(0xFFB55C50),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
@@ -175,8 +175,8 @@ class _SitterProfilePageState extends State<SitterProfilePage> {
                               .add(UpdateSitterEvent(sitter: updatedSitter));
                         },
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xFFB55C50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -185,7 +185,7 @@ class _SitterProfilePageState extends State<SitterProfilePage> {
                           elevation: 5,
                         ),
                         child: const Text("Update",
-                            style: TextStyle(color: Colors.black)),
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ],
                   ),

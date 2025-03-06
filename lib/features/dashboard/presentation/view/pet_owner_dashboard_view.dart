@@ -16,16 +16,16 @@ class OwnerDashboardPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Pet Sitters',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFFB55C50),
+        backgroundColor: const Color(0xFFA7522A), // Updated color
       ),
       body: BlocBuilder<OwnerDashboardBloc, OwnerDashboardState>(
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(
               child: CircularProgressIndicator(
-                color: Color(0xFFB55C50),
+                color: Color(0xFFA7522A), // Updated color
               ),
             );
           }
@@ -52,7 +52,7 @@ class OwnerDashboardPage extends StatelessWidget {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, // Number of columns in grid
               crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+              mainAxisSpacing: 15,
               childAspectRatio: 0.75, // Aspect ratio of each card
             ),
             itemCount: state.sitters.length,
@@ -69,7 +69,7 @@ class OwnerDashboardPage extends StatelessWidget {
                     Container(
                       height: 120, // Fixed height for image
                       decoration: BoxDecoration(
-                        color: const Color(0xFFB55C50),
+                        color: const Color(0xFFA7522A), // Updated color
                         borderRadius:
                             BorderRadius.vertical(top: Radius.circular(12)),
                         image: DecorationImage(
@@ -103,7 +103,8 @@ class OwnerDashboardPage extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFB55C50),
+                          backgroundColor:
+                              const Color(0xFFA7522A), // Updated color
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -117,7 +118,12 @@ class OwnerDashboardPage extends StatelessWidget {
                             ),
                           );
                         },
-                        child: const Text('View Details'),
+                        child: const Text(
+                          'View Details',
+                          style: TextStyle(
+                              color:
+                                  Colors.white), // Button text color to white
+                        ),
                       ),
                     ),
                   ],

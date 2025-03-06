@@ -43,10 +43,11 @@ class _OwnerProfilePageState extends State<OwnerProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Profile', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.black,
+        title: const Text('Profile',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        backgroundColor: const Color(0xFFB55C50),
         elevation: 0,
       ),
       body: BlocBuilder<OwnerProfileBloc, OwnerProfileState>(
@@ -56,10 +57,9 @@ class _OwnerProfilePageState extends State<OwnerProfilePage> {
           } else if (state.owner == null) {
             return const Center(
                 child: Text("No owner available",
-                    style: TextStyle(color: Colors.white)));
+                    style: TextStyle(color: Colors.black)));
           } else {
             final owner = state.owner!;
-            print('OWNER PROFILE:: $owner');
             _nameController.text = owner.name;
             _emailController.text = owner.email;
             _phoneController.text = owner.phone;
@@ -83,7 +83,7 @@ class _OwnerProfilePageState extends State<OwnerProfilePage> {
                       InkWell(
                         onTap: () {
                           showModalBottomSheet(
-                            backgroundColor: Colors.black,
+                            backgroundColor: Colors.grey[900],
                             context: context,
                             isScrollControlled: true,
                             shape: const RoundedRectangleBorder(
@@ -97,46 +97,10 @@ class _OwnerProfilePageState extends State<OwnerProfilePage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      _browseImage(ImageSource.camera);
-                                      Navigator.pop(context);
-                                    },
-                                    icon: const Icon(Icons.camera,
-                                        color: Colors.white),
-                                    label: const Text('Camera',
-                                        style: TextStyle(color: Colors.white)),
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.black,
-                                      backgroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 20),
-                                      elevation: 5,
-                                    ),
-                                  ),
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      _browseImage(ImageSource.gallery);
-                                      Navigator.pop(context);
-                                    },
-                                    icon: const Icon(Icons.image,
-                                        color: Colors.white),
-                                    label: const Text('Gallery',
-                                        style: TextStyle(color: Colors.white)),
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.black,
-                                      backgroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 20),
-                                      elevation: 5,
-                                    ),
-                                  ),
+                                  _buildImagePickerButton(context, "Camera",
+                                      Icons.camera, ImageSource.camera),
+                                  _buildImagePickerButton(context, "Gallery",
+                                      Icons.image, ImageSource.gallery),
                                 ],
                               ),
                             ),
@@ -169,15 +133,14 @@ class _OwnerProfilePageState extends State<OwnerProfilePage> {
                             address: _addressController.text,
                             image: _img?.path,
                           );
-                          print('VIEW USERID:::$updatedOwner');
                           // Trigger the update event in the OwnerProfileBloc
                           context
                               .read<OwnerProfileBloc>()
                               .add(UpdateOwnerEvent(owner: updatedOwner));
                         },
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xFFB55C50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -186,7 +149,9 @@ class _OwnerProfilePageState extends State<OwnerProfilePage> {
                           elevation: 5,
                         ),
                         child: const Text("Update",
-                            style: TextStyle(color: Colors.black)),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -204,20 +169,41 @@ class _OwnerProfilePageState extends State<OwnerProfilePage> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
         controller: controller,
-        readOnly: false,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle:
-              const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          labelStyle: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 17),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.white),
+            borderSide:
+                const BorderSide(color: Color.fromARGB(255, 255, 204, 204)),
           ),
           filled: true,
-          fillColor: Colors.grey[800],
-          hintStyle: const TextStyle(color: Colors.white),
+          fillColor: const Color.fromARGB(255, 251, 251, 251),
+          hintStyle: const TextStyle(color: Colors.black),
         ),
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.black),
+      ),
+    );
+  }
+
+  ElevatedButton _buildImagePickerButton(
+      BuildContext context, String label, IconData icon, ImageSource source) {
+    return ElevatedButton.icon(
+      onPressed: () {
+        _browseImage(source);
+        Navigator.pop(context);
+      },
+      icon: Icon(icon, color: Colors.white),
+      label: Text(label, style: const TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black,
+        backgroundColor: const Color(0xFFB55C50),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        elevation: 5,
       ),
     );
   }

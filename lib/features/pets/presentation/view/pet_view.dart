@@ -36,12 +36,12 @@ class AllPetsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'My Pets',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF6A4E1D),
+        backgroundColor: const Color(0xFFB55C50), // Primary color
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.add, color: Colors.white),
             onPressed: () {
               _showAddPetDialog(context); // Show the "Add Pet" dialog
             },
@@ -55,7 +55,7 @@ class AllPetsPage extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(
-                  color: Color(0xFF6A4E1D),
+                  color: Color(0xFFB55C50), // Primary color
                 ),
               );
             }
@@ -76,7 +76,7 @@ class AllPetsPage extends StatelessWidget {
                 if (state.isLoading) {
                   return const Center(
                     child: CircularProgressIndicator(
-                      color: Color(0xFF6A4E1D),
+                      color: Color(0xFFB55C50), // Primary color
                     ),
                   );
                 }
@@ -134,7 +134,7 @@ class AllPetsPage extends StatelessWidget {
                           Container(
                             height: 120, // Fixed height for image
                             decoration: BoxDecoration(
-                              color: const Color(0xFF6A4E1D),
+                              color: const Color(0xFFB55C50), // Primary color
                               borderRadius: const BorderRadius.vertical(
                                   top: Radius.circular(12)),
                               image: DecorationImage(
@@ -176,7 +176,8 @@ class AllPetsPage extends StatelessWidget {
                               children: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
+                                    backgroundColor:
+                                        Colors.red[300], // Lightened red
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
@@ -188,22 +189,24 @@ class AllPetsPage extends StatelessWidget {
                                     _deletePet(context, loggedInUser.ownerId!,
                                         pet.petId!);
                                   },
-                                  child: const Text('Delete'),
+                                  child: const Text('Delete',
+                                      style: TextStyle(color: Colors.white)),
                                 ),
                                 ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 201, 189, 78), // Light yellow
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      minimumSize: const Size(80, 40),
                                     ),
-                                    minimumSize: const Size(80, 40),
-                                  ),
-                                  onPressed: () {
-                                    _showEditPetDialog(
-                                        context, loggedInUser.ownerId!, pet);
-                                  },
-                                  child: const Text('Edit'),
-                                ),
+                                    onPressed: () {
+                                      _showEditPetDialog(
+                                          context, loggedInUser.ownerId!, pet);
+                                    },
+                                    child: const Text('Edit',
+                                        style: TextStyle(color: Colors.white))),
                               ],
                             ),
                           ),
@@ -226,15 +229,12 @@ class AllPetsPage extends StatelessWidget {
       return const AssetImage('assets/images/pet_placeholder.png');
     } else if (image.startsWith('data:image')) {
       return MemoryImage(base64Decode(image.split(',').last));
-    } else if (Uri.tryParse(image)?.isAbsolute ?? false) {
-      return NetworkImage(image);
-    } else if (File(image).existsSync()) {
-      return FileImage(File(image));
     } else {
-      return AssetImage(image);
+      return AssetImage('assets/images/pet_placeholder.png');
     }
   }
 
+  /// Show the "Add Pet" dialog
   /// Show the "Add Pet" dialog
   void _showAddPetDialog(BuildContext context) async {
     final loggedInUser = await getLoggedInUser();
@@ -272,10 +272,17 @@ class AllPetsPage extends StatelessWidget {
                         .pickImage(source: ImageSource.gallery);
                     if (image != null) {
                       final bytes = await File(image.path).readAsBytes();
-                      base64Image = base64Encode(bytes);
+                      // Prepend the MIME type and encoding information
+                      base64Image =
+                          "data:image/jpeg;base64,${base64Encode(bytes)}";
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Image uploaded successfully')),
+                      );
                     }
                   },
-                  child: const Text('Upload Image'),
+                  child: const Text('Upload Image',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -289,6 +296,13 @@ class AllPetsPage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () async {
+                if (base64Image == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please upload an image')),
+                  );
+                  return;
+                }
+
                 final newPet = {
                   "petname": petnameController.text,
                   "type": typeController.text,
